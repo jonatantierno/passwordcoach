@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PasswordCoach</string>
+    <string name="well_done">Strong password, well Done!</string>
+    <string name="you_can_do_better">C\'mon, you can do better.</string>
+</resources>
