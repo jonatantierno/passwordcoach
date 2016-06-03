@@ -8,6 +8,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.CoreMatchers.any;
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -20,9 +23,6 @@ public class checkSetOfRules {
     @Mock
     private Rule subRule2;
 
-    private Result subResultStrong = new StrongPasswordResult();
-    private Result subResult2Weak = new WeakPasswordResult();
-
     @Test
     public void emptySet(){
         Result result = new SetOfRules(EMPTY_LIST).analyze(password);
@@ -32,21 +32,32 @@ public class checkSetOfRules {
 
     @Test
     public void oneAnalysis() {
-        when(subRule.analyze(password)).thenReturn(subResultStrong);
+        when(subRule.analyze(password)).thenReturn(new StrongPasswordResult());
 
         Result result = new SetOfRules(singletonList(subRule)).analyze(password);
 
-        assertThat(result, is(subResultStrong));
+        assertThat(result, instanceOf(StrongPasswordResult.class));
     }
 
     @Test
     public void severalAnalysisOneIsWeak() {
-        when(subRule.analyze(password)).thenReturn(subResultStrong);
-        when(subRule2.analyze(password)).thenReturn(subResult2Weak);
+        when(subRule.analyze(password)).thenReturn(new StrongPasswordResult());
+        when(subRule2.analyze(password)).thenReturn(new WeakPasswordResult());
 
 
         Result result = new SetOfRules(asList(subRule,subRule2)).analyze(password);
 
-        assertThat(result, is(subResult2Weak));
+        assertThat(result, instanceOf(WeakPasswordResult.class));
+    }
+
+    @Test
+    public void severalAnalysisAllAreStrong() {
+        when(subRule.analyze(password)).thenReturn(new StrongPasswordResult());
+        when(subRule2.analyze(password)).thenReturn(new StrongPasswordResult());
+
+
+        Result result = new SetOfRules(asList(subRule,subRule2)).analyze(password);
+
+        assertThat(result, instanceOf(StrongPasswordResult.class));
     }
 }
