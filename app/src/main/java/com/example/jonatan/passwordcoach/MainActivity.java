@@ -1,28 +1,23 @@
 package com.example.jonatan.passwordcoach;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.jonatan.passwordcoach.domain.model.dictionary.DictionaryIterator;
-import com.example.jonatan.passwordcoach.domain.model.dictionary.LineStream;
 import com.example.jonatan.passwordcoach.domain.model.Analysis;
-import com.example.jonatan.passwordcoach.domain.model.rules.ShortPasswordRule;
-import com.example.jonatan.passwordcoach.domain.ports.Gui;
 import com.example.jonatan.passwordcoach.domain.model.rules.DictionaryRule;
-import com.example.jonatan.passwordcoach.domain.model.rules.EmptyPasswordRule;
 import com.example.jonatan.passwordcoach.domain.model.rules.Result;
 import com.example.jonatan.passwordcoach.domain.model.rules.ResultCode;
 import com.example.jonatan.passwordcoach.domain.model.rules.SetOfRules;
+import com.example.jonatan.passwordcoach.domain.model.rules.ShortPasswordRule;
+import com.example.jonatan.passwordcoach.domain.ports.Gui;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,29 +54,13 @@ public class MainActivity extends AppCompatActivity implements Gui {
                             MainActivity.this,
                             new SetOfRules(
                                     Arrays.asList(
-                                            new EmptyPasswordRule(),
                                             new ShortPasswordRule(MIN_LENGTH),
+                                            // No mays, no numbers, no special chars
                                             new DictionaryRule(
-                                                    new DictionaryIterator(
-                                                            new LineStream(
-                                                                    new BufferedReader(
-                                                                            new InputStreamReader(
-                                                                                    MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
+                                                    MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
                                             ),
                                             new DictionaryRule(
-                                                    new DictionaryIterator(
-                                                            new LineStream(
-                                                                    new BufferedReader(
-                                                                            new InputStreamReader(
-                                                                                    MainActivity.this.getResources().openRawResource(R.raw.common_passwords)
-                                                                            )
-                                                                    )
-                                                            )
-                                                    )
+                                                    MainActivity.this.getResources().openRawResource(R.raw.common_passwords)
                                             )
                                             // Prepend season
                                             // Append season
