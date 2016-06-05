@@ -10,13 +10,15 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.jonatan.passwordcoach.dictionary.DictionaryIterator;
-import com.example.jonatan.passwordcoach.dictionary.LineStream;
-import com.example.jonatan.passwordcoach.rules.DictionaryRule;
-import com.example.jonatan.passwordcoach.rules.EmptyPasswordRule;
-import com.example.jonatan.passwordcoach.rules.Result;
-import com.example.jonatan.passwordcoach.rules.ResultCode;
-import com.example.jonatan.passwordcoach.rules.SetOfRules;
+import com.example.jonatan.passwordcoach.domain.model.dictionary.DictionaryIterator;
+import com.example.jonatan.passwordcoach.domain.model.dictionary.LineStream;
+import com.example.jonatan.passwordcoach.domain.model.Analysis;
+import com.example.jonatan.passwordcoach.domain.ports.Gui;
+import com.example.jonatan.passwordcoach.domain.model.rules.DictionaryRule;
+import com.example.jonatan.passwordcoach.domain.model.rules.EmptyPasswordRule;
+import com.example.jonatan.passwordcoach.domain.model.rules.Result;
+import com.example.jonatan.passwordcoach.domain.model.rules.ResultCode;
+import com.example.jonatan.passwordcoach.domain.model.rules.SetOfRules;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

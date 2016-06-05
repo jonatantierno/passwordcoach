@@ -1,4 +1,4 @@
-package com.example.jonatan.passwordcoach.rules;
+package com.example.jonatan.passwordcoach.domain.model.rules;
 
 import java.util.Iterator;
 

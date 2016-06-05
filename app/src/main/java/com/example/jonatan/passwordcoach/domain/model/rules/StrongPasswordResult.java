@@ -1,4 +1,4 @@
-package com.example.jonatan.passwordcoach.rules;
+package com.example.jonatan.passwordcoach.domain.model.rules;
 
 public class StrongPasswordResult implements Result {
     @Override

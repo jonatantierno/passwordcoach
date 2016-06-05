@@ -1,4 +1,4 @@
-package com.example.jonatan.passwordcoach.dictionary;
+package com.example.jonatan.passwordcoach.domain.model.dictionary;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

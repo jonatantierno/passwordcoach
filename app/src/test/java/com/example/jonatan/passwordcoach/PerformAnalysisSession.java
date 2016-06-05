@@ -1,7 +1,9 @@
 package com.example.jonatan.passwordcoach;
 
-import com.example.jonatan.passwordcoach.rules.Rule;
-import com.example.jonatan.passwordcoach.rules.Result;
+import com.example.jonatan.passwordcoach.domain.model.Analysis;
+import com.example.jonatan.passwordcoach.domain.ports.Gui;
+import com.example.jonatan.passwordcoach.domain.model.rules.Rule;
+import com.example.jonatan.passwordcoach.domain.model.rules.Result;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

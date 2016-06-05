@@ -1,7 +1,8 @@
-package com.example.jonatan.passwordcoach;
+package com.example.jonatan.passwordcoach.domain.model;
 
-import com.example.jonatan.passwordcoach.rules.Rule;
-import com.example.jonatan.passwordcoach.rules.Result;
+import com.example.jonatan.passwordcoach.domain.ports.Gui;
+import com.example.jonatan.passwordcoach.domain.model.rules.Rule;
+import com.example.jonatan.passwordcoach.domain.model.rules.Result;
 
 import rx.Observable;
 import rx.Observer;

@@ -1,17 +1,9 @@
-package com.example.jonatan.passwordcoach.rules;
-
-import android.content.res.Resources;
-
-import com.example.jonatan.passwordcoach.R;
+package com.example.jonatan.passwordcoach.domain.model.rules;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Collections;
 

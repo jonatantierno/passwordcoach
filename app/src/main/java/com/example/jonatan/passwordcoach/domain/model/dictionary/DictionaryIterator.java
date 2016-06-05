@@ -1,4 +1,4 @@
-package com.example.jonatan.passwordcoach.dictionary;
+package com.example.jonatan.passwordcoach.domain.model.dictionary;
 
 import java.util.Iterator;
 

@@ -1,6 +1,5 @@
-package com.example.jonatan.passwordcoach.rules;
+package com.example.jonatan.passwordcoach.domain.model.rules;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class SetOfRules implements Rule {

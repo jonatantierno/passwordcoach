@@ -1,4 +1,4 @@
-package com.example.jonatan.passwordcoach.rules;
+package com.example.jonatan.passwordcoach.domain.model.rules;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,9 +8,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static java.util.Arrays.asList;
 import static java.util.Collections.EMPTY_LIST;
 import static java.util.Collections.singletonList;
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.isA;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
