@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.example.jonatan.passwordcoach.domain.model.dictionary.DictionaryIterator;
 import com.example.jonatan.passwordcoach.domain.model.dictionary.LineStream;
 import com.example.jonatan.passwordcoach.domain.model.Analysis;
+import com.example.jonatan.passwordcoach.domain.model.rules.ShortPasswordRule;
 import com.example.jonatan.passwordcoach.domain.ports.Gui;
 import com.example.jonatan.passwordcoach.domain.model.rules.DictionaryRule;
 import com.example.jonatan.passwordcoach.domain.model.rules.EmptyPasswordRule;
@@ -28,14 +29,17 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
+    public static final int MIN_LENGTH = 6;
     private EditText password;
     private TextView result;
     private Map<ResultCode, Integer> codeToStringId = buildCodeToStringId();
 
     private Map<ResultCode,Integer> buildCodeToStringId() {
         HashMap<ResultCode, Integer> map = new HashMap<>();
-        map.put(ResultCode.STRONG, R.string.password_is_strong);
+        map.put(ResultCode.TOO_SHORT, R.string.password_is_too_short);
+        map.put(ResultCode.IN_DICTIONARY, R.string.password_is_in_dictionary);
         map.put(ResultCode.WEAK, R.string.password_is_weak);
+        map.put(ResultCode.STRONG, R.string.password_is_strong);
         return map;
     }
 
@@ -56,12 +60,24 @@ public class MainActivity extends AppCompatActivity implements Gui {
                             new SetOfRules(
                                     Arrays.asList(
                                             new EmptyPasswordRule(),
+                                            new ShortPasswordRule(MIN_LENGTH),
                                             new DictionaryRule(
                                                     new DictionaryIterator(
                                                             new LineStream(
                                                                     new BufferedReader(
                                                                             new InputStreamReader(
                                                                                     MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
+                                                                            )
+                                                                    )
+                                                            )
+                                                    )
+                                            ),
+                                            new DictionaryRule(
+                                                    new DictionaryIterator(
+                                                            new LineStream(
+                                                                    new BufferedReader(
+                                                                            new InputStreamReader(
+                                                                                    MainActivity.this.getResources().openRawResource(R.raw.common_passwords)
                                                                             )
                                                                     )
                                                             )

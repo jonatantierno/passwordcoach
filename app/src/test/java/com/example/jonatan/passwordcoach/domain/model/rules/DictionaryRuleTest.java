@@ -20,6 +20,7 @@ public class DictionaryRuleTest {
         Result result = new DictionaryRule(Arrays.asList(password).iterator()).analyze(password);
 
         assertThat(result.passwordIsStrong(), is(false));
+        assertThat(result.code(), is(ResultCode.IN_DICTIONARY));
     }
 
     @Test

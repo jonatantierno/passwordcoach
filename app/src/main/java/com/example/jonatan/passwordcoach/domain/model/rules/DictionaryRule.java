@@ -14,7 +14,7 @@ public class DictionaryRule implements Rule{
     public Result analyze(String password) {
         while(dictionary.hasNext()) {
             if(dictionary.next().equals(password)) {
-                return new WeakPasswordResult();
+                return new WeakPasswordResult(ResultCode.IN_DICTIONARY);
             }
         }
         return new StrongPasswordResult();
