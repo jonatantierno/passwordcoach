@@ -1,10 +1,9 @@
 package com.example.jonatan.passwordcoach;
 
 import android.content.Context;
-import android.content.res.Resources;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -16,17 +15,27 @@ import com.example.jonatan.passwordcoach.dictionary.LineStream;
 import com.example.jonatan.passwordcoach.rules.DictionaryRule;
 import com.example.jonatan.passwordcoach.rules.EmptyPasswordRule;
 import com.example.jonatan.passwordcoach.rules.Result;
+import com.example.jonatan.passwordcoach.rules.ResultCode;
 import com.example.jonatan.passwordcoach.rules.SetOfRules;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
     private EditText password;
     private TextView result;
+    private Map<ResultCode, Integer> codeToStringId = buildCodeToStringId();
+
+    private Map<ResultCode,Integer> buildCodeToStringId() {
+        HashMap<ResultCode, Integer> map = new HashMap<>();
+        map.put(ResultCode.STRONG, R.string.password_is_strong);
+        map.put(ResultCode.WEAK, R.string.password_is_weak);
+        return map;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,10 +102,16 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
     @Override
     public void show(Result analysisResult) {
-        if (analysisResult.passwordIsStrong()) {
-            result.setText(R.string.well_done);
-        } else {
-            result.setText(R.string.you_can_do_better);
+        result.setText(codeToStringId.get(analysisResult.code()));
+
+        colorizeResult(analysisResult.passwordIsStrong());
+    }
+
+    private void colorizeResult(boolean isStrong) {
+        int color = R.color.result_weak;
+        if (isStrong) {
+            color = R.color.colorPrimaryDark;
         }
+        result.setTextColor(ContextCompat.getColor(this, color));
     }
 }

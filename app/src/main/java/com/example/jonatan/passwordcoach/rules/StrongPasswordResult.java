@@ -5,4 +5,9 @@ public class StrongPasswordResult implements Result {
     public boolean passwordIsStrong() {
         return true;
     }
+
+    @Override
+    public ResultCode code() {
+        return ResultCode.STRONG;
+    }
 }

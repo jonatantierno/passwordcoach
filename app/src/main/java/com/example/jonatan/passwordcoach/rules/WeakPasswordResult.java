@@ -6,4 +6,9 @@ public class WeakPasswordResult implements Result {
     public boolean passwordIsStrong() {
         return false;
     }
+
+    @Override
+    public ResultCode code() {
+        return ResultCode.WEAK;
+    }
 }
