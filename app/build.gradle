@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.3"
 
     defaultConfig {
-        applicationId "com.example.jonatan.passwordcoach"
+        applicationId "es.jonatantierno.passwordcoach"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
@@ -26,4 +26,5 @@ dependencies {
     testCompile group: 'org.mockito', name: 'mockito-core', version: '1.9.+'
     compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'io.reactivex:rxandroid:0.25.0'
+    compile 'com.nulab-inc:zxcvbn:1.1.3'
 }

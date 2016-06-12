@@ -5,5 +5,6 @@
     <string name="password_is_strong">Well done, that is a strong password!</string>
     <string name="password_is_weak">The password is weak. C\'mon, you can do better</string>
     <string name="password_is_too_short">The password is too short.</string>
-    <string name="password_is_in_dictionary">That password in in a dictionary</string>
+    <string name="password_is_in_dictionary">The password is in a dictionary</string>
+    <string name="weak_according_to_meter">According to the password meter, this is weak.</string>
 </resources>
