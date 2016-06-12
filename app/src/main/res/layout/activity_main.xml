@@ -23,7 +23,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:imeOptions="actionGo"
-        android:inputType="text"
+        android:inputType="textVisiblePassword"
         />
 
     <TextView
