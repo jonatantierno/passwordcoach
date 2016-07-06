@@ -1,4 +1,4 @@
-package es.jonatantierno.passwordcoach.domain.model.tips;
+package es.jonatantierno.passwordcoach.repositories;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.jonatantierno.passwordcoach.R;
+import es.jonatantierno.passwordcoach.domain.model.tips.Tip;
+import es.jonatantierno.passwordcoach.domain.model.tips.TipType;
 import es.jonatantierno.passwordcoach.domain.ports.TipDisplay;
 
 public class TipFrame implements TipDisplay {

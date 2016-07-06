@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import es.jonatantierno.passwordcoach.domain.model.Analysis;
 import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
-import es.jonatantierno.passwordcoach.domain.model.tips.TipFrame;
+import es.jonatantierno.passwordcoach.repositories.TipFrame;
 import es.jonatantierno.passwordcoach.domain.model.tips.SimpleTipSource;
 import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
