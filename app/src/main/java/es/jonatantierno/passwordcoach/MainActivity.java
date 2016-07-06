@@ -5,12 +5,16 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import es.jonatantierno.passwordcoach.domain.model.Analysis;
+import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
+import es.jonatantierno.passwordcoach.domain.model.tips.TipFrame;
+import es.jonatantierno.passwordcoach.domain.model.tips.SimpleTipSource;
 import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
@@ -18,6 +22,7 @@ import es.jonatantierno.passwordcoach.domain.model.rules.ResultCode;
 import es.jonatantierno.passwordcoach.domain.model.rules.SetOfRules;
 import es.jonatantierno.passwordcoach.domain.model.rules.ShortPasswordRule;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
+import es.jonatantierno.passwordcoach.domain.ports.TipDisplay;
 import es.jonatantierno.passwordcoach.repositories.ZxcvbnPasswordMeter;
 
 import java.util.Arrays;
@@ -33,6 +38,9 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private TextView result;
     private Map<ResultCode, Integer> codeToStringId = buildCodeToStringId();
 
+    private TipDisplay tipframe;
+    private TipSource tipSource = new SimpleTipSource();
+
     private Map<ResultCode,Integer> buildCodeToStringId() {
         HashMap<ResultCode, Integer> map = new HashMap<>();
         map.put(ResultCode.TOO_SHORT, R.string.password_is_too_short);
@@ -47,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
 
         password = (EditText) findViewById(R.id.passwordEditText);
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -90,8 +99,9 @@ public class MainActivity extends AppCompatActivity implements Gui {
     @Override
     public void show(Result analysisResult) {
         result.setText(codeToStringId.get(analysisResult.code()));
-
         colorizeResult(analysisResult.passwordIsStrong());
+
+        tipframe.show(tipSource.tip(analysisResult));
     }
 
     private void colorizeResult(boolean isStrong) {

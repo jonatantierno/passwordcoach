@@ -7,4 +7,7 @@
     <string name="password_is_too_short">The password is too short.</string>
     <string name="password_is_in_dictionary">The password is in a dictionary</string>
     <string name="weak_according_to_meter">According to the password meter, this is weak.</string>
+    <string name="advice_technique">You can follow this technique to create simple but strong passwords:</string>
+    <string name="advice">Now that you can create strong passwords, follow these advices to protect them:</string>
+    <string name="empty" />
 </resources>
