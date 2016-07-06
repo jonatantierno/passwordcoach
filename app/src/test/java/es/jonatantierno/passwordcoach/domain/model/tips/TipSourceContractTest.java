@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public abstract class TipSourceContractTest {
     @NonNull
-    public abstract SimpleTipSource buildSource();
+    public abstract TipSource buildSource();
 
     @Test
     public void nullResult() {

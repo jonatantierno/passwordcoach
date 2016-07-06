@@ -11,23 +11,23 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import es.jonatantierno.passwordcoach.domain.model.Analysis;
-import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
-import es.jonatantierno.passwordcoach.repositories.TipFrame;
-import es.jonatantierno.passwordcoach.domain.model.tips.SimpleTipSource;
 import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
 import es.jonatantierno.passwordcoach.domain.model.rules.ResultCode;
 import es.jonatantierno.passwordcoach.domain.model.rules.SetOfRules;
 import es.jonatantierno.passwordcoach.domain.model.rules.ShortPasswordRule;
+import es.jonatantierno.passwordcoach.domain.model.tips.RandomTipSource;
+import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import es.jonatantierno.passwordcoach.domain.ports.TipDisplay;
+import es.jonatantierno.passwordcoach.repositories.TipFrame;
 import es.jonatantierno.passwordcoach.repositories.ZxcvbnPasswordMeter;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private Map<ResultCode, Integer> codeToStringId = buildCodeToStringId();
 
     private TipDisplay tipframe;
-    private TipSource tipSource = new SimpleTipSource();
+    private TipSource tipSource;
 
     private Map<ResultCode,Integer> buildCodeToStringId() {
         HashMap<ResultCode, Integer> map = new HashMap<>();
@@ -56,6 +56,13 @@ public class MainActivity extends AppCompatActivity implements Gui {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
+        tipSource = new RandomTipSource(
+                getResources().getStringArray(R.array.advice_titles),
+                getResources().getStringArray(R.array.advice_contents),
+                getResources().getStringArray(R.array.technique_titles),
+                getResources().getStringArray(R.array.technique_contents)
+        );
+
 
         password = (EditText) findViewById(R.id.passwordEditText);
         password.setOnEditorActionListener(new TextView.OnEditorActionListener() {

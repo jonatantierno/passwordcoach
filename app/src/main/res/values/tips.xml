@@ -1,0 +1,80 @@
+<resources>
+    <string-array name="advice_titles">
+        <item>Writing passwords down</item>
+        <item>Do not reuse passwords</item>
+        <item>Do not trust in L33t</item>
+        <item>What not to use</item>
+        <item>Password managers</item>
+    </string-array>
+    <string-array name="advice_contents">
+        <item>If you need to write down your passwords, it is OK,
+            as long as you keep it stored in your wallet,
+            along with the rest of your personal items. \n\n
+            Just do not write it in a post it on your monitor! </item>
+        <item>Never use one password for several services! \n\n
+            If a hacker is able to steal your password in one site, then all
+            your sites are compromised. \n\n
+            In fact, an easy way for a hacker to steal passwords, is to set up
+            a service that requires a subcription with login and password,
+            and then use that password in the other sites of the victims.capturethat passworda system is to set
+            up a.
+            Just do not write it in a post it on your monitor!</item>
+        <item> Sometimes the L33t (leet) alphabet is used to transform a simple word in a password
+            by substituting some of its letters with numbers or symbols, like in "Pa$$w0rd". \n\n
+            This is a bad idea! The tools used by hackers are aware of this technique and can
+            easily apply these permutations to dictionaries to break these passwords.
+        </item>
+        <item>Do not use any recognizable word or data as a password. This includes: any word in a dictionary;
+            movie titles; names of places, characters or pets; memorable but public dates as the birthday of
+            your father or the date of your wedding; any of the previous ones accompanied by a number.
+        </item>
+        <item>If you have several different passwords to handle at the same time, you may consider using
+            a password manager. \n\n
+            A password manager is a software where you can safely store passwords in an encrypted file,
+            that only you can access using a master password. But remember to be extra careful with this
+            oner, as if it is compromised, then all your other passwords will be too!
+        </item>
+    </string-array>
+    <string-array name="technique_titles">
+        <item>With a sentence</item>
+        <item>Passphrase</item>
+        <item>From word or root</item>
+        <item>Mnemonics</item>
+        <item>PsychoPass</item>
+    </string-array>
+    <string-array name="technique_contents">
+        <item>Pick a sentence, and form a password with the first
+letter and the number of letters of each word.
+For greater security, add symbols (length 0), and uppercase. \n\n
+For example, from the phrase: "Con cien cañones por banda!" \n\n
+we obtain the password: C3c4c6p3b5!</item>
+        <item>It your password policy allows it,
+simply pick a long sentence with at least 3 or four words. \n\n
+For greater strength, with numbers, uppercase and symbols. \n\n
+For example: MargaretThatcherIs100%Sexy
+        </item>
+        <item>Choose a more or less long word, and break it in two parts,
+separated with one or several symbols.\n\n
+For example: from the word "revolution", we can get the password: rev%%olution.\n\n
+For stronger passwords you can use several words: Sil%%ent--rev%%olution
+        </item>
+        <item>Choose a random, strong password, then invent a mnemonic to memorize it. \n\n
+Choose a word for every letter forming a sentence. Incorprorate the numbers and symbols in the
+phrase so that they have some meaning. The sentence does not need to make much sense,
+just by choosing the set of words the memorization will be easy.\n\n
+For example, from the password: Ch_t3cq7AM, we could make up the sentence:\n\n
+"Charles had underlined the three careful quilts at 7 a.m."\n\n
+This method is specially useful for the case where the system chooses the password for you.
+        </item>
+        <item> This method is based in the disposition of the keys in a keyboard. Choose an initial
+key, and a sequence of movements taking us from one letter to the next.\n\n
+For example, if we take the letter "h" and the sequence: "Up, right, up, left" the resulting
+password would be: hyu76. \n\n
+With this technique, we can generate many different passwords by memorizing a single sequence,
+and then choosing different keys as starting points.\n\n
+Also, to make stronger passwords, you can choose two keys instead of one, and execute the
+sequence twice. With the previous sequence, using "h" and also the character ".", the password
+would be: hyu76.lkio
+        </item>
+    </string-array>
+</resources>
