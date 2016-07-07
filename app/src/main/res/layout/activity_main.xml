@@ -36,38 +36,45 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
-    <FrameLayout
-        android:id="@+id/tipLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/resultTextView"
-        android:visibility="gone">
+        android:id="@+id/scrollView" >
 
-        <LinearLayout
-            android:orientation="vertical"
+        <FrameLayout
+            android:id="@+id/tipLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/advice_technique"
-                android:id="@+id/advice_technique_textview" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="-"
-                android:id="@+id/tip_title" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="@string/advice_technique"
+                    android:id="@+id/advice_technique_textview" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="-"
-                android:id="@+id/tip_content" />
-        </LinearLayout>
-    </FrameLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="-"
+                    android:id="@+id/tip_title" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:text="-"
+                    android:id="@+id/tip_content" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+
 </RelativeLayout>

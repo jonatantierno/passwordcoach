@@ -42,4 +42,8 @@ public class TipFrame implements TipDisplay {
         content.setText(tip.content);
         container.setVisibility(View.VISIBLE);
     }
+
+    public void hide() {
+        container.setVisibility(View.INVISIBLE);
+    }
 }

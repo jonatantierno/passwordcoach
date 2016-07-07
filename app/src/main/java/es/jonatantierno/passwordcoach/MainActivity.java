@@ -38,8 +38,9 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private TextView result;
     private Map<ResultCode, Integer> codeToStringId = buildCodeToStringId();
 
-    private TipDisplay tipframe;
+    private TipFrame tipframe;
     private TipSource tipSource;
+    private boolean readyToLeave = true;
 
     private Map<ResultCode,Integer> buildCodeToStringId() {
         HashMap<ResultCode, Integer> map = new HashMap<>();
@@ -69,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_GO) {
+                    readyToLeave = false;
                     hideKeyboard();
 
                     new Analysis(
@@ -102,6 +104,11 @@ public class MainActivity extends AppCompatActivity implements Gui {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
     }
+    private void showKeyboard() {
+        password.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(password, InputMethodManager.SHOW_IMPLICIT);
+    }
 
     @Override
     public void show(Result analysisResult) {
@@ -117,5 +124,18 @@ public class MainActivity extends AppCompatActivity implements Gui {
             color = R.color.colorPrimaryDark;
         }
         result.setTextColor(ContextCompat.getColor(this, color));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (readyToLeave) {
+            super.onBackPressed();
+        }
+        else {
+            readyToLeave = true;
+            tipframe.hide();
+            password.setText("");
+            showKeyboard();
+        }
     }
 }
