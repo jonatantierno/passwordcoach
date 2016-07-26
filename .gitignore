@@ -1,3 +1,6 @@
+# Credential files (twitter app credential file)
+app/src/main/res/values/twitter_app_credentials.xml
+
 # Idea files
 .idea
 

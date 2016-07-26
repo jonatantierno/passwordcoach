@@ -2,7 +2,6 @@ package es.jonatantierno.passwordcoach;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
@@ -25,9 +24,9 @@ import es.jonatantierno.passwordcoach.domain.model.rules.ShortPasswordRule;
 import es.jonatantierno.passwordcoach.domain.model.tips.RandomTipSource;
 import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
-import es.jonatantierno.passwordcoach.domain.ports.TipDisplay;
 import es.jonatantierno.passwordcoach.repositories.TipFrame;
 import es.jonatantierno.passwordcoach.repositories.ZxcvbnPasswordMeter;
+import rx.Observer;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
@@ -55,6 +54,23 @@ public class MainActivity extends AppCompatActivity implements Gui {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+            new TweetSource().recover(MainActivity.this, new Observer<String>(){
+                @Override
+                public void onCompleted() {
+                    writeString(result.getText().toString() + " #END");
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    writeString(e.toString());
+                }
+
+                @Override
+                public void onNext(String s) {
+                    writeString(result.getText().toString()+ " # " +s);
+                }
+            });
+
         setContentView(R.layout.activity_main);
         tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
         tipSource = new RandomTipSource(
@@ -100,6 +116,15 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
     }
 
+    private void writeString(final String text) {
+        MainActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                result.setText(text);
+            }
+        });
+    }
+
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
@@ -123,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
         if (isStrong) {
             color = R.color.colorPrimaryDark;
         }
-        result.setTextColor(ContextCompat.getColor(this, color));
+        result.setTextColor(this.getResources().getColor(color));
     }
 
     @Override
