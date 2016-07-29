@@ -13,6 +13,7 @@ import com.wuman.android.auth.AuthorizationFlow;
 import com.wuman.android.auth.AuthorizationUIController;
 import com.wuman.android.auth.DialogFragmentController;
 import com.wuman.android.auth.OAuthManager;
+import com.wuman.android.auth.oauth.OAuthHmacCredential;
 import com.wuman.android.auth.oauth2.store.SharedPreferencesCredentialStore;
 
 import java.io.IOException;
@@ -66,8 +67,8 @@ public class CredentialFactory {
         oAuthManager = new OAuthManager(flowBuilder.build(), controller);
     }
 
-    public Credential getCredential() throws IOException {
-        return oAuthManager.authorize10a(OAUTH_USER_ID, null, null).getResult();
+    public OAuthHmacCredential getCredential() throws IOException {
+        return (OAuthHmacCredential) oAuthManager.authorize10a(OAUTH_USER_ID, null, null).getResult();
     }
 
     public void deleteCredentials() {
