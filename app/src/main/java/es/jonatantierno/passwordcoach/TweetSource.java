@@ -6,12 +6,14 @@ import com.wuman.android.auth.oauth.OAuthHmacCredential;
 
 import java.io.IOException;
 
-import rx.Observer;
+import rx.Observable;
+import rx.Subscriber;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
@@ -19,34 +21,44 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class TweetSource {
 
-    public void recover(final FragmentActivity activity, final Observer<String> observer) {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                CredentialFactory credentialFactory = new CredentialFactory();
-                credentialFactory.init(activity);
-                try {
-                    OAuthHmacCredential credential = credentialFactory.getCredential();
-
-                    ConfigurationBuilder cb = new ConfigurationBuilder()
-                            .setOAuthConsumerKey(activity.getString(R.string.client_id))
-                            .setOAuthConsumerSecret(activity.getString(R.string.client_secret))
-                            .setOAuthAccessTokenSecret(credential.getTokenSharedSecret())
-                            .setOAuthAccessToken(credential.getAccessToken());
-
-                    QueryResult search = new TwitterFactory(cb.build()).getInstance().search(new Query("@twitterapi"));
-
-                    for(Status status: search.getTweets()){
-                        observer.onNext(status.getText());
+    public Observable<String> asObservable(final FragmentActivity activity) {
+        return Observable.create(
+                new Observable.OnSubscribe<String>() {
+                    @Override
+                    public void call(Subscriber<? super String> sub) {
+                        load(activity, sub);
                     }
-                    observer.onCompleted();
-                } catch (IOException e) {
-                    observer.onError(e);
-                } catch (TwitterException e) {
-                    observer.onError(e);
                 }
+        );
+    }
+
+    private void load(FragmentActivity activity, Subscriber<? super String> observer) {
+        try {
+            QueryResult search = new TwitterFactory(conf(activity)).getInstance().search(new Query("@twitterapi"));
+
+            for (Status status : search.getTweets()) {
+                observer.onNext(status.getText());
             }
-        }).start();
+            observer.onCompleted();
+        } catch (IOException e) {
+            observer.onError(e);
+        } catch (TwitterException e) {
+            observer.onError(e);
+        }
+    }
+
+    private Configuration conf(FragmentActivity activity) throws IOException {
+        CredentialFactory credentialFactory = new CredentialFactory();
+        credentialFactory.init(activity);
+
+        OAuthHmacCredential credential = credentialFactory.getCredential();
+
+        ConfigurationBuilder cb = new ConfigurationBuilder()
+                .setOAuthConsumerKey(activity.getString(R.string.client_id))
+                .setOAuthConsumerSecret(activity.getString(R.string.client_secret))
+                .setOAuthAccessTokenSecret(credential.getTokenSharedSecret())
+                .setOAuthAccessToken(credential.getAccessToken());
+
+        return cb.build();
     }
 }

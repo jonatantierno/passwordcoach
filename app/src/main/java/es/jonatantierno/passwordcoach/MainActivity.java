@@ -3,7 +3,6 @@ package es.jonatantierno.passwordcoach;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -26,7 +25,8 @@ import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import es.jonatantierno.passwordcoach.repositories.TipFrame;
 import es.jonatantierno.passwordcoach.repositories.ZxcvbnPasswordMeter;
-import rx.Observer;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private TipSource tipSource;
     private boolean readyToLeave = true;
 
-    private Map<ResultCode,Integer> buildCodeToStringId() {
+    private Map<ResultCode, Integer> buildCodeToStringId() {
         HashMap<ResultCode, Integer> map = new HashMap<>();
         map.put(ResultCode.TOO_SHORT, R.string.password_is_too_short);
         map.put(ResultCode.IN_DICTIONARY, R.string.password_is_in_dictionary);
@@ -54,22 +54,13 @@ public class MainActivity extends AppCompatActivity implements Gui {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            new TweetSource().recover(MainActivity.this, new Observer<String>(){
-                @Override
-                public void onCompleted() {
-                    writeString(result.getText().toString() + " #END");
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                    writeString(e.toString());
-                }
-
-                @Override
-                public void onNext(String s) {
-                    writeString(result.getText().toString()+ " # " +s);
-                }
-            });
+        new TweetSource().asObservable(this).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .reduce(new StringBuffer(), (buffer, tweet) -> buffer.append("#").append(tweet))
+                .subscribe(
+                        buffer -> writeString(buffer.toString()),
+                        e -> writeString(e.toString()
+                        )
+                );
 
         setContentView(R.layout.activity_main);
         tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
@@ -82,33 +73,30 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
 
         password = (EditText) findViewById(R.id.passwordEditText);
-        password.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_GO) {
-                    readyToLeave = false;
-                    hideKeyboard();
+        password.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                readyToLeave = false;
+                hideKeyboard();
 
-                    new Analysis(
-                            MainActivity.this,
-                            new SetOfRules(
-                                    Arrays.asList(
-                                            new ShortPasswordRule(MIN_LENGTH),
-                                            new DictionaryRule(
-                                                    MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
-                                            ),
-                                            new DictionaryRule(
-                                                    MainActivity.this.getResources().openRawResource(R.raw.common_passwords)
-                                            ),
-                                            new PasswordMeterRule( new ZxcvbnPasswordMeter(), MIN_STRENGTH)
-                                    )
-                            )
-                    ).start(password.getText().toString().trim());
+                new Analysis(
+                        MainActivity.this,
+                        new SetOfRules(
+                                Arrays.asList(
+                                        new ShortPasswordRule(MIN_LENGTH),
+                                        new DictionaryRule(
+                                                MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
+                                        ),
+                                        new DictionaryRule(
+                                                MainActivity.this.getResources().openRawResource(R.raw.common_passwords)
+                                        ),
+                                        new PasswordMeterRule(new ZxcvbnPasswordMeter(), MIN_STRENGTH)
+                                )
+                        )
+                ).start(password.getText().toString().trim());
 
-                    return true;
-                } else {
-                    return false;
-                }
+                return true;
+            } else {
+                return false;
             }
         });
 
@@ -117,18 +105,14 @@ public class MainActivity extends AppCompatActivity implements Gui {
     }
 
     private void writeString(final String text) {
-        MainActivity.this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                result.setText(text);
-            }
-        });
+        MainActivity.this.runOnUiThread(() -> result.setText(text));
     }
 
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
     }
+
     private void showKeyboard() {
         password.requestFocus();
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -155,8 +139,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
     public void onBackPressed() {
         if (readyToLeave) {
             super.onBackPressed();
-        }
-        else {
+        } else {
             readyToLeave = true;
             tipframe.hide();
             password.setText("");
