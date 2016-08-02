@@ -17,7 +17,7 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
 /**
- * This class reads tweets from an account and returns them as strings
+ * This class reads tweets from an account and returns them as an observable
  */
 public class TweetSource {
 

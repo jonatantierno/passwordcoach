@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.jonatantierno.passwordcoach.domain.model.Analysis;
+import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
 import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
@@ -54,8 +55,10 @@ public class MainActivity extends AppCompatActivity implements Gui {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new TweetSource().asObservable(this).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .reduce(new StringBuffer(), (buffer, tweet) -> buffer.append("#").append(tweet))
+        new RxDictionary(new TweetSource().asObservable(this)).asObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .reduce(new StringBuffer(), (buffer, word) -> buffer.append(" ").append(word))
                 .subscribe(
                         buffer -> writeString(buffer.toString()),
                         e -> writeString(e.toString()
