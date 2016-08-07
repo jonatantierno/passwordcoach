@@ -3,6 +3,7 @@ package es.jonatantierno.passwordcoach;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -16,6 +17,7 @@ import java.util.Map;
 import es.jonatantierno.passwordcoach.domain.model.Analysis;
 import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
 import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
+import es.jonatantierno.passwordcoach.domain.model.rules.ObservableDictionaryRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
 import es.jonatantierno.passwordcoach.domain.model.rules.ResultCode;
@@ -28,6 +30,7 @@ import es.jonatantierno.passwordcoach.repositories.TipFrame;
 import es.jonatantierno.passwordcoach.repositories.ZxcvbnPasswordMeter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private TipFrame tipframe;
     private TipSource tipSource;
     private boolean readyToLeave = true;
+    CompositeSubscription compositeSubscription = new CompositeSubscription();
 
     private Map<ResultCode, Integer> buildCodeToStringId() {
         HashMap<ResultCode, Integer> map = new HashMap<>();
@@ -55,15 +59,17 @@ public class MainActivity extends AppCompatActivity implements Gui {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new RxDictionary(new TweetSource().asObservable(this)).asObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .reduce(new StringBuffer(), (buffer, word) -> buffer.append(" ").append(word))
-                .subscribe(
-                        buffer -> writeString(buffer.toString()),
-                        e -> writeString(e.toString()
+
+        compositeSubscription.add(
+                new RxDictionary(new TweetSource().asObservable(this)).asObservable()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .reduce(new StringBuffer(), (buffer, word) -> buffer.append(" ").append(word))
+                        .subscribe(
+                                buffer -> writeString(buffer.toString()),
+                                e -> writeString(e.toString())
                         )
-                );
+        );
 
         setContentView(R.layout.activity_main);
         tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
@@ -85,6 +91,10 @@ public class MainActivity extends AppCompatActivity implements Gui {
                         MainActivity.this,
                         new SetOfRules(
                                 Arrays.asList(
+                                        new ObservableDictionaryRule(
+                                                new RxDictionary(new TweetSource().asObservable(this)).asObservable()
+                                                        .subscribeOn(Schedulers.io())
+                                        ),
                                         new ShortPasswordRule(MIN_LENGTH),
                                         new DictionaryRule(
                                                 MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
@@ -107,7 +117,14 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        compositeSubscription.clear();
+        super.onDestroy();
+    }
+
     private void writeString(final String text) {
+        Log.d("TAG", text);
         MainActivity.this.runOnUiThread(() -> result.setText(text));
     }
 
