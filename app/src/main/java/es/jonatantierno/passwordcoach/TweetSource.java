@@ -10,9 +10,12 @@ import rx.Observable;
 import rx.Subscriber;
 import twitter4j.Query;
 import twitter4j.QueryResult;
+import twitter4j.ResponseList;
 import twitter4j.Status;
+import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.User;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -34,9 +37,14 @@ public class TweetSource {
 
     private void load(FragmentActivity activity, Subscriber<? super String> observer) {
         try {
-            QueryResult search = new TwitterFactory(conf(activity)).getInstance().search(new Query("@twitterapi"));
+            Twitter twitter = new TwitterFactory(conf(activity)).getInstance();
 
-            for (Status status : search.getTweets()) {
+            User user = twitter.showUser(twitter.getId());
+            observer.onNext(user.getDescription());
+
+            ResponseList<Status> userTimeline = twitter.getUserTimeline();
+
+            for (Status status : userTimeline) {
                 observer.onNext(status.getText());
             }
             observer.onCompleted();
