@@ -1,4 +1,4 @@
-package es.jonatantierno.passwordcoach.repositories;
+package es.jonatantierno.passwordcoach.infrastructure.repositories;
 
 import android.view.View;
 import android.view.ViewGroup;

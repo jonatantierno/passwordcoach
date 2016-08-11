@@ -1,4 +1,4 @@
-package es.jonatantierno.passwordcoach;
+package es.jonatantierno.passwordcoach.infrastructure;
 
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.ActionBarActivity;
@@ -18,6 +18,8 @@ import com.wuman.android.auth.oauth2.store.SharedPreferencesCredentialStore;
 
 import java.io.IOException;
 import java.util.Collections;
+
+import es.jonatantierno.passwordcoach.R;
 
 public class CredentialFactory {
     public static final String OAUTH_USER_ID = "250730737";

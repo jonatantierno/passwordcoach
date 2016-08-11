@@ -3,6 +3,7 @@ package es.jonatantierno.passwordcoach;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -13,19 +14,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.jonatantierno.passwordcoach.domain.model.Analysis;
 import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
 import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
+import es.jonatantierno.passwordcoach.domain.model.rules.ObservableDictionaryRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
 import es.jonatantierno.passwordcoach.domain.model.rules.ResultCode;
 import es.jonatantierno.passwordcoach.domain.model.rules.SetOfRules;
 import es.jonatantierno.passwordcoach.domain.model.rules.ShortPasswordRule;
+import es.jonatantierno.passwordcoach.domain.model.rules.ToggableRule;
 import es.jonatantierno.passwordcoach.domain.model.tips.RandomTipSource;
 import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
-import es.jonatantierno.passwordcoach.repositories.TipFrame;
-import es.jonatantierno.passwordcoach.repositories.ZxcvbnPasswordMeter;
+import es.jonatantierno.passwordcoach.infrastructure.AndroidAnalysis;
+import es.jonatantierno.passwordcoach.infrastructure.ObservableTweets;
+import es.jonatantierno.passwordcoach.infrastructure.repositories.TipFrame;
+import es.jonatantierno.passwordcoach.infrastructure.repositories.ZxcvbnPasswordMeter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -36,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
     private EditText password;
     private TextView result;
+    private View progress;
     private Map<ResultCode, Integer> codeToStringId = buildCodeToStringId();
 
     private TipFrame tipframe;
@@ -55,17 +60,17 @@ public class MainActivity extends AppCompatActivity implements Gui {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new RxDictionary(new TweetSource().asObservable(this)).asObservable()
+        new RxDictionary(new ObservableTweets(this).go()).asObservable()
+                .reduce(new StringBuffer(), (buffer, word) -> buffer.append(" ").append(word))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .reduce(new StringBuffer(), (buffer, word) -> buffer.append(" ").append(word))
                 .subscribe(
-                        buffer -> writeString(buffer.toString()),
-                        e -> writeString(e.toString()
-                        )
+                        buffer -> result.setText(buffer.toString()),
+                        e -> result.setText(e.toString())
                 );
 
         setContentView(R.layout.activity_main);
+        progress = findViewById(R.id.progress);
         tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
         tipSource = new RandomTipSource(
                 getResources().getStringArray(R.array.advice_titles),
@@ -80,11 +85,17 @@ public class MainActivity extends AppCompatActivity implements Gui {
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 readyToLeave = false;
                 hideKeyboard();
+                progress.setVisibility(View.VISIBLE);
 
-                new Analysis(
+                new AndroidAnalysis(
                         MainActivity.this,
                         new SetOfRules(
                                 Arrays.asList(
+                                        new ToggableRule(false,
+                                                new ObservableDictionaryRule(
+                                                        new RxDictionary(
+                                                                new ObservableTweets(this).go()).asObservable())
+                                        ),
                                         new ShortPasswordRule(MIN_LENGTH),
                                         new DictionaryRule(
                                                 MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
@@ -107,10 +118,6 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
     }
 
-    private void writeString(final String text) {
-        MainActivity.this.runOnUiThread(() -> result.setText(text));
-    }
-
     private void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
@@ -128,6 +135,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
         colorizeResult(analysisResult.passwordIsStrong());
 
         tipframe.show(tipSource.tip(analysisResult));
+        progress.setVisibility(View.GONE);
     }
 
     private void colorizeResult(boolean isStrong) {

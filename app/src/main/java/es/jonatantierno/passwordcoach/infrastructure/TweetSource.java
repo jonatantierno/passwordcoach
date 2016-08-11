@@ -1,4 +1,4 @@
-package es.jonatantierno.passwordcoach;
+package es.jonatantierno.passwordcoach.infrastructure;
 
 import android.support.v4.app.FragmentActivity;
 
@@ -6,16 +6,12 @@ import com.wuman.android.auth.oauth.OAuthHmacCredential;
 
 import java.io.IOException;
 
-import rx.Observable;
+import es.jonatantierno.passwordcoach.R;
 import rx.Subscriber;
-import twitter4j.Query;
-import twitter4j.QueryResult;
-import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
-import twitter4j.User;
 import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 
@@ -24,27 +20,13 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class TweetSource {
 
-    public Observable<String> asObservable(final FragmentActivity activity) {
-        return Observable.create(
-                new Observable.OnSubscribe<String>() {
-                    @Override
-                    public void call(Subscriber<? super String> sub) {
-                        load(activity, sub);
-                    }
-                }
-        );
-    }
-
-    private void load(FragmentActivity activity, Subscriber<? super String> observer) {
+    public void load(FragmentActivity activity, Subscriber<? super String> observer) {
         try {
             Twitter twitter = new TwitterFactory(conf(activity)).getInstance();
 
-            User user = twitter.showUser(twitter.getId());
-            observer.onNext(user.getDescription());
-
-            ResponseList<Status> userTimeline = twitter.getUserTimeline();
-
-            for (Status status : userTimeline) {
+            observer.onNext(twitter.getScreenName());
+            observer.onNext(twitter.showUser(twitter.getId()).getDescription());
+            for (Status status : twitter.getUserTimeline()) {
                 observer.onNext(status.getText());
             }
             observer.onCompleted();

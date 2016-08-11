@@ -1,20 +1,23 @@
 package es.jonatantierno.passwordcoach.domain.model;
 
-import es.jonatantierno.passwordcoach.domain.ports.Gui;
-import es.jonatantierno.passwordcoach.domain.model.rules.Rule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
-
+import es.jonatantierno.passwordcoach.domain.model.rules.Rule;
+import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import rx.Observable;
-import rx.Observer;
+import rx.Scheduler;
 import rx.Subscriber;
 
-public class Analysis implements Observer<Result>{
+public class Analysis {
     private final Gui gui;
     private final Rule rule;
+    private Scheduler workScheduler;
+    private Scheduler guiScheduler;
 
-    public Analysis(Gui gui, Rule rule) {
+    public Analysis(Gui gui, Rule rule, Scheduler workScheduler, Scheduler guiScheduler) {
         this.gui = gui;
         this.rule = rule;
+        this.workScheduler = workScheduler;
+        this.guiScheduler = guiScheduler;
     }
 
     public void start(final String password) {
@@ -26,22 +29,9 @@ public class Analysis implements Observer<Result>{
                 );
                 subscriber.onCompleted();
             }
-        }).subscribe(this);
+        }).subscribeOn(workScheduler)
+                .observeOn(guiScheduler)
+                .subscribe(result -> gui.show(result));
 
-    }
-
-    @Override
-    public void onCompleted() {
-
-    }
-
-    @Override
-    public void onError(Throwable e) {
-
-    }
-
-    @Override
-    public void onNext(Result result) {
-        gui.show(result);
     }
 }

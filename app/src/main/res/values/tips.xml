@@ -16,9 +16,8 @@
             your sites are compromised. \n\n
             In fact, an easy way for a hacker to steal passwords, is to set up
             a service that requires a subcription with login and password,
-            and then use that password in the other sites of the victims.capturethat passworda system is to set
-            up a.
-            Just do not write it in a post it on your monitor!</item>
+            and then use that password in the other sites of the victims.
+        </item>
         <item> Sometimes the L33t (leet) alphabet is used to transform a simple word in a password
             by substituting some of its letters with numbers or symbols, like in "Pa$$w0rd". \n\n
             This is a bad idea! The tools used by hackers are aware of this technique and can

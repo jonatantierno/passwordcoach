@@ -4,6 +4,8 @@ import es.jonatantierno.passwordcoach.domain.model.Analysis;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import es.jonatantierno.passwordcoach.domain.model.rules.Rule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +30,7 @@ public class PerformAnalysisSession {
     public void anyPassword(){
         when(rule.analyze(password)).thenReturn(result);
 
-        new Analysis(gui, rule).start(password);
+        new Analysis(gui, rule, Schedulers.io(), AndroidSchedulers.mainThread()).start(password);
 
         verify(gui).show(result);
     }
