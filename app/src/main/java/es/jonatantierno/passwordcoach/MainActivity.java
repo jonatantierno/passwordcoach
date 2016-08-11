@@ -1,8 +1,12 @@
 package es.jonatantierno.passwordcoach;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -156,5 +160,16 @@ public class MainActivity extends AppCompatActivity implements Gui {
             password.setText("");
             showKeyboard();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    public void goToDictionaryActivity(MenuItem item) {
+        startActivity(new Intent(this, DictionaryActivity.class));
     }
 }

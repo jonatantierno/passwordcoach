@@ -11,4 +11,6 @@
     <string name="advice">Now that you can create strong passwords, follow these advices to protect them:</string>
     <string name="empty" />
     <string name="analyzing">Analyzing password, please wait...</string>
+    <string name="personal_dictionary">Personal Dictionary</string>
+    <string name="pers_dict">dict.</string>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:id="@+id/personal_dictionary"
+    android:title="@string/personal_dictionary"
+    android:titleCondensed="@string/pers_dict"
+    android:onClick="goToDictionaryActivity"/>
+</menu>
