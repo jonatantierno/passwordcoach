@@ -1,6 +1,5 @@
 package es.jonatantierno.passwordcoach;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,12 +9,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
@@ -27,16 +24,16 @@ import es.jonatantierno.passwordcoach.domain.model.rules.ResultCode;
 import es.jonatantierno.passwordcoach.domain.model.rules.SetOfRules;
 import es.jonatantierno.passwordcoach.domain.model.rules.ShortPasswordRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.ToggableRule;
-import es.jonatantierno.passwordcoach.domain.model.tips.RandomTipSource;
 import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import es.jonatantierno.passwordcoach.infrastructure.AndroidAnalysis;
+import es.jonatantierno.passwordcoach.infrastructure.ConfiguredTipSource;
+import es.jonatantierno.passwordcoach.infrastructure.KeyboardControl;
 import es.jonatantierno.passwordcoach.infrastructure.ObservableTweets;
 import es.jonatantierno.passwordcoach.infrastructure.PersistentBoolean;
+import es.jonatantierno.passwordcoach.infrastructure.ResultCodeToStringIdMap;
 import es.jonatantierno.passwordcoach.infrastructure.repositories.TipFrame;
 import es.jonatantierno.passwordcoach.infrastructure.repositories.ZxcvbnPasswordMeter;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
@@ -46,21 +43,12 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private EditText password;
     private TextView result;
     private View progress;
-    private Map<ResultCode, Integer> codeToStringId = buildCodeToStringId();
+    private Map<ResultCode, Integer> codeToStringId = new ResultCodeToStringIdMap();
 
     private TipFrame tipframe;
     private TipSource tipSource;
     private boolean readyToLeave = true;
-
-    private Map<ResultCode, Integer> buildCodeToStringId() {
-        HashMap<ResultCode, Integer> map = new HashMap<>();
-        map.put(ResultCode.TOO_SHORT, R.string.password_is_too_short);
-        map.put(ResultCode.IN_DICTIONARY, R.string.password_is_in_dictionary);
-        map.put(ResultCode.WEAK, R.string.password_is_weak);
-        map.put(ResultCode.STRONG, R.string.password_is_strong);
-        map.put(ResultCode.WEAK_ACCORDING_TO_METER, R.string.weak_according_to_meter);
-        return map;
-    }
+    private KeyboardControl keyboardControl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,19 +57,13 @@ public class MainActivity extends AppCompatActivity implements Gui {
         setContentView(R.layout.activity_main);
         progress = findViewById(R.id.progress);
         tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
-        tipSource = new RandomTipSource(
-                getResources().getStringArray(R.array.advice_titles),
-                getResources().getStringArray(R.array.advice_contents),
-                getResources().getStringArray(R.array.technique_titles),
-                getResources().getStringArray(R.array.technique_contents)
-        );
 
 
         password = (EditText) findViewById(R.id.passwordEditText);
         password.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 readyToLeave = false;
-                hideKeyboard();
+                keyboardControl.hide();
                 progress.setVisibility(View.VISIBLE);
 
                 new AndroidAnalysis(
@@ -111,20 +93,17 @@ public class MainActivity extends AppCompatActivity implements Gui {
                 return false;
             }
         });
+        keyboardControl = new KeyboardControl(password, this);
 
         result = (TextView) findViewById(R.id.resultTextView);
 
     }
 
-    private void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(password.getWindowToken(), 0);
-    }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-    private void showKeyboard() {
-        password.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(password, InputMethodManager.SHOW_IMPLICIT);
+        tipSource = new ConfiguredTipSource(this);
     }
 
     @Override
@@ -152,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
             readyToLeave = true;
             tipframe.hide();
             password.setText("");
-            showKeyboard();
+            keyboardControl.show();
         }
     }
 

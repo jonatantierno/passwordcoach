@@ -37,6 +37,13 @@ public class DictionaryRuleTest {
     }
 
     @Test
+    public void wordOfLessThanFourLetters(){
+        Result result = new DictionaryRule(asList("wor").iterator()).analyze("word");
+
+        assertThat(result.passwordIsStrong(), is(true));
+    }
+
+    @Test
     public void wordNotInDictionary(){
         Result result = new DictionaryRule(asList("word").iterator()).analyze("another one");
 

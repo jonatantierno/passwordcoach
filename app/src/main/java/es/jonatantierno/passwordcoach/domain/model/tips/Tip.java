@@ -14,4 +14,35 @@ public class Tip {
         this.title = title;
         this.content = content;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tip tip = (Tip) o;
+
+        if (type != tip.type) return false;
+        if (title != null ? !title.equals(tip.title) : tip.title != null) return false;
+        return content != null ? content.equals(tip.content) : tip.content == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = type != null ? type.hashCode() : 0;
+        result = 31 * result + (title != null ? title.hashCode() : 0);
+        result = 31 * result + (content != null ? content.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Tip{" +
+                "type=" + type +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

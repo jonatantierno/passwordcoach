@@ -20,11 +20,11 @@ public class ObservableDictionaryRule implements Rule {
                 e -> {
                     throw new RuntimeException(e);
                 })
-                .filter(s -> s.equals(password))
+                .filter(s -> password.contains(s))
                 .toBlocking().getIterator();
 
         if (coincidences.hasNext()) {
-            return new WeakPasswordResult(ResultCode.IN_DICTIONARY);
+            return new WeakPasswordResult(ResultCode.IN_PERSONAL_ATTACK_DICTIONARY);
         } else {
             return new StrongPasswordResult();
         }

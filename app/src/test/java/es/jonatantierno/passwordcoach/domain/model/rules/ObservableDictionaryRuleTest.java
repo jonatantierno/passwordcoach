@@ -28,6 +28,13 @@ public class ObservableDictionaryRuleTest {
     }
 
     @Test
+    public void containsWordInDictionary() {
+        Result result = new ObservableDictionaryRule(Observable.just("bar")).analyze("barco");
+
+        assertThat(result.passwordIsStrong(), is(false));
+    }
+
+    @Test
     public void wordInDictionary(){
         Result result = new ObservableDictionaryRule(Observable.just("bar","foo")).analyze("foo");
 

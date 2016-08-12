@@ -24,6 +24,7 @@ public class TipFrame implements TipDisplay {
         map.put(TipType.ADVICE, R.string.advice);
         map.put(TipType.TECHNIQUE, R.string.advice_technique);
         map.put(TipType.EMPTY, R.string.empty);
+        map.put(TipType.ACTIVATE_PERSONAL_DICTIONARY, R.string.advice);
         return map;
     }
 
@@ -33,6 +34,11 @@ public class TipFrame implements TipDisplay {
         message= (TextView) container.findViewById(R.id.advice_technique_textview);
         title = (TextView) container.findViewById(R.id.tip_title);
         content = (TextView) container.findViewById(R.id.tip_content);
+    }
+
+    //For testing
+    Integer getId(TipType type){
+        return typeToStringId.get(type);
     }
 
     @Override

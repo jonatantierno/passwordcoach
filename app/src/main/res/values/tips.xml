@@ -76,4 +76,11 @@ sequence twice. With the previous sequence, using "h" and also the character "."
 would be: hyu76.lkio
         </item>
     </string-array>
+
+    <string name="activateTipTitle">Activate Personal Attack Dictionary</string>
+    <string name="activateTipContent">Now that you are capable of creating strong password,
+try a more strict analysis that mimics what a hacker would do. \n\n
+Obtain more information and activate this option selecting the \"Personal Dictionary\" menu item.
+    </string>
+
 </resources>

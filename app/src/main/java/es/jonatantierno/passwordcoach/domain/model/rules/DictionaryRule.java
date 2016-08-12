@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 
 public class DictionaryRule implements Rule {
+    public static final int MIN_DICTIONARY_WORD_LENGTH = 4;
     private final Iterator<String> dictionary;
 
     public DictionaryRule(Iterator<String> dictionary) {
@@ -32,7 +33,7 @@ public class DictionaryRule implements Rule {
     public Result analyze(String password) {
         while (dictionary.hasNext()) {
             String next = dictionary.next();
-            if (password.contains(next)) {
+            if(next.length() > MIN_DICTIONARY_WORD_LENGTH && password.contains(next)) {
                 if (password.equals(next)) {
                     return new WeakPasswordResult(ResultCode.IN_DICTIONARY);
                 }
