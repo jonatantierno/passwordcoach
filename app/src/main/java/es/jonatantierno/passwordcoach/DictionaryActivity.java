@@ -2,6 +2,7 @@ package es.jonatantierno.passwordcoach;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ public class DictionaryActivity extends AppCompatActivity {
     private Switch dictSwitch;
     private TextView dictionaryInfoTextView;
     private TextView dictionaryTextView;
+    private View progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,18 +26,28 @@ public class DictionaryActivity extends AppCompatActivity {
         dictionaryInfoTextView = (TextView) findViewById(R.id.dictionaryInfoTextView);
         dictionaryTextView = (TextView) findViewById(R.id.dictionaryTextView);
         dictSwitch = (Switch) findViewById(R.id.dictionarySwitch);
+        progress = findViewById(R.id.dictProgress);
+
         dictSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             switchDictionary(isChecked);
             new PersistentBoolean(this).save(isChecked);
         });
 
-        switchDictionary(new PersistentBoolean(this).load());
+        loadSwitch(new PersistentBoolean(this).load());
+    }
+
+    private void loadSwitch(boolean enabled) {
+        dictSwitch.setChecked(enabled);
+        switchDictionary(enabled);
     }
 
     private void switchDictionary(boolean isChecked) {
         if (isChecked) {
+
+            progress.setVisibility(View.VISIBLE);
+
             new RxDictionary(new ObservableTweets(this).go()).asObservable()
-                    .reduce(new StringBuffer(), (buffer, word) -> buffer.append(" \t \t \t ").append(word))
+                    .reduce(new StringBuffer(), (buffer, word) -> buffer.append(word).append(" \t \t \t "))
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
@@ -50,5 +62,6 @@ public class DictionaryActivity extends AppCompatActivity {
     private void setDictionaryText(String head, String body) {
         dictionaryInfoTextView.setText(head);
         dictionaryTextView.setText(body);
+        progress.setVisibility(View.GONE);
     }
 }

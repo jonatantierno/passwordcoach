@@ -26,7 +26,14 @@ public class RxDictionaryTest {
     public void usernames() {
         new RxDictionary(Observable.just("@username")).asObservable().subscribe(testSubscriber);
 
-        testSubscriber.assertValues("@username", "username");
+        testSubscriber.assertValues("username");
+    }
+
+    @Test
+    public void hashtags() {
+        new RxDictionary(Observable.just("#hashtag")).asObservable().subscribe(testSubscriber);
+
+        testSubscriber.assertValues("hashtag");
     }
 
     @Test
@@ -62,7 +69,7 @@ public class RxDictionaryTest {
 
     @Test
     public void url() {
-        new RxDictionary(Observable.just("http://bitly.com")).asObservable().subscribe(testSubscriber);
+        new RxDictionary(Observable.just("http://bitly.com, co/tsts")).asObservable().subscribe(testSubscriber);
 
         testSubscriber.assertNoValues();
     }

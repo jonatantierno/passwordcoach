@@ -18,9 +18,9 @@ public class RxDictionary {
                 .map(s -> removePrefixes(s))
                 .map(s -> removeSuffixes(s))
                 .filter(s -> s.length() > 3)
-                .filter(s -> !s.contains("://"))
+                .filter(s -> !s.contains("/"))
                 .map(s -> s.toLowerCase())
-                .flatMap(this::userName);
+                .flatMap(this::usernameOrHashtag);
     }
 
     private String removePrefixes(String s) {
@@ -43,9 +43,9 @@ public class RxDictionary {
         return Observable.from(s.split("[ ,.;!()\\?¿]"));
     }
 
-    private Observable<? extends String> userName(String s) {
-        if (s.length() > 1 && s.charAt(0) == '@') {
-            return Observable.just(s, s.substring(1));
+    private Observable<? extends String> usernameOrHashtag(String s) {
+        if (s.length() > 1 && (s.charAt(0) == '@' || s.charAt(0) == '#' )) {
+            return Observable.just(s.substring(1));
         } else return Observable.just(s);
     }
 }

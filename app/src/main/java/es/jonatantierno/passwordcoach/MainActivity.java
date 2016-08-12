@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
                 progress.setVisibility(View.VISIBLE);
 
                 new AndroidAnalysis(
-                        MainActivity.this,
+                        this,
                         new SetOfRules(
                                 Arrays.asList(
                                         new ToggableRule(
@@ -96,10 +96,10 @@ public class MainActivity extends AppCompatActivity implements Gui {
                                         ),
                                         new ShortPasswordRule(MIN_LENGTH),
                                         new DictionaryRule(
-                                                MainActivity.this.getResources().openRawResource(R.raw.spanish_words)
+                                                this.getResources().openRawResource(R.raw.spanish_words)
                                         ),
                                         new DictionaryRule(
-                                                MainActivity.this.getResources().openRawResource(R.raw.common_passwords)
+                                                this.getResources().openRawResource(R.raw.common_passwords)
                                         ),
                                         new PasswordMeterRule(new ZxcvbnPasswordMeter(), MIN_STRENGTH)
                                 )

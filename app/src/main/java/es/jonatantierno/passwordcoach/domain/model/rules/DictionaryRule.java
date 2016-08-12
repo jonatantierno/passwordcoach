@@ -31,8 +31,12 @@ public class DictionaryRule implements Rule {
     @Override
     public Result analyze(String password) {
         while (dictionary.hasNext()) {
-            if (dictionary.next().equals(password)) {
-                return new WeakPasswordResult(ResultCode.IN_DICTIONARY);
+            String next = dictionary.next();
+            if (password.contains(next)) {
+                if (password.equals(next)) {
+                    return new WeakPasswordResult(ResultCode.IN_DICTIONARY);
+                }
+                return new WeakPasswordResult(ResultCode.CONTAINS_WORD_IN_DICTIONARY);
             }
         }
         return new StrongPasswordResult();

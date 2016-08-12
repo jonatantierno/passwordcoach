@@ -14,6 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static rx.schedulers.Schedulers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PerformAnalysisSession {
@@ -30,7 +31,7 @@ public class PerformAnalysisSession {
     public void anyPassword(){
         when(rule.analyze(password)).thenReturn(result);
 
-        new Analysis(gui, rule, Schedulers.io(), AndroidSchedulers.mainThread()).start(password);
+        new Analysis(gui, rule, immediate(), immediate()).start(password);
 
         verify(gui).show(result);
     }
