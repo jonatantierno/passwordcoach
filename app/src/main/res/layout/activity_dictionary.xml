@@ -9,4 +9,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="es.jonatantierno.passwordcoach.DictionaryActivity">
 
+    <Switch
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dictionarySwitch"
+        android:id="@+id/dictionarySwitch"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/dictionary_info"
+        android:id="@+id/dictionaryInfoTextView"
+        android:layout_below="@+id/dictionarySwitch"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/dictionaryScroll"
+        android:layout_below="@+id/dictionaryInfoTextView">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/dictionaryTextView"
+            android:layout_below="@+id/dictionaryInfoTextView"
+            android:layout_toRightOf="@+id/dictionaryScroll"
+            android:layout_toEndOf="@+id/dictionaryScroll" />
+    </ScrollView>
+
 </RelativeLayout>
