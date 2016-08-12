@@ -32,6 +32,7 @@ import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import es.jonatantierno.passwordcoach.infrastructure.AndroidAnalysis;
 import es.jonatantierno.passwordcoach.infrastructure.ObservableTweets;
+import es.jonatantierno.passwordcoach.infrastructure.PersistentBoolean;
 import es.jonatantierno.passwordcoach.infrastructure.repositories.TipFrame;
 import es.jonatantierno.passwordcoach.infrastructure.repositories.ZxcvbnPasswordMeter;
 import rx.android.schedulers.AndroidSchedulers;
@@ -64,14 +65,6 @@ public class MainActivity extends AppCompatActivity implements Gui {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        new RxDictionary(new ObservableTweets(this).go()).asObservable()
-                .reduce(new StringBuffer(), (buffer, word) -> buffer.append(" ").append(word))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        buffer -> result.setText(buffer.toString()),
-                        e -> result.setText(e.toString())
-                );
 
         setContentView(R.layout.activity_main);
         progress = findViewById(R.id.progress);
@@ -95,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements Gui {
                         MainActivity.this,
                         new SetOfRules(
                                 Arrays.asList(
-                                        new ToggableRule(false,
+                                        new ToggableRule(
+                                                new PersistentBoolean(this).load(),
                                                 new ObservableDictionaryRule(
                                                         new RxDictionary(
                                                                 new ObservableTweets(this).go()).asObservable())

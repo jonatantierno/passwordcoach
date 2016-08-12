@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
 import es.jonatantierno.passwordcoach.infrastructure.ObservableTweets;
+import es.jonatantierno.passwordcoach.infrastructure.PersistentBoolean;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -25,7 +26,10 @@ public class DictionaryActivity extends AppCompatActivity {
         dictSwitch = (Switch) findViewById(R.id.dictionarySwitch);
         dictSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             switchDictionary(isChecked);
+            new PersistentBoolean(this).save(isChecked);
         });
+
+        switchDictionary(new PersistentBoolean(this).load());
     }
 
     private void switchDictionary(boolean isChecked) {
