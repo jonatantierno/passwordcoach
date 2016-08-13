@@ -47,7 +47,7 @@ letter and the number of letters of each word.
 For greater security, add symbols (length 0), and uppercase. \n\n
 For example, from the phrase: "Con cien cañones por banda!" \n\n
 we obtain the password: C3c4c6p3b5!</item>
-        <item>It your password policy allows it,
+        <item>If your password policy allows it,
 simply pick a long sentence with at least 3 or four words. \n\n
 For greater strength, with numbers, uppercase and symbols. \n\n
 For example: MargaretThatcherIs100%Sexy
