@@ -12,6 +12,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +22,7 @@
         </activity>
         <activity android:name=".DictionaryActivity"
             android:label="@string/personal_dictionary"
+            android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity">
         </activity>
     </application>

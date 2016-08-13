@@ -28,9 +28,9 @@ public class DictionaryRuleTest {
 
     @Test
     public void containsWordInDictionary(){
-        String password = "password";
+        String password = "hola";
 
-        Result result = new DictionaryRule(asList(password).iterator()).analyze("my"+password+"1234");
+        Result result = new DictionaryRule(asList(password).iterator()).analyze("**"+password+"1234");
 
         assertThat(result.passwordIsStrong(), is(false));
         assertThat(result.code(), is(CONTAINS_WORD_IN_DICTIONARY));

@@ -9,6 +9,7 @@ import android.widget.TextView;
 import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
 import es.jonatantierno.passwordcoach.infrastructure.ObservableTweets;
 import es.jonatantierno.passwordcoach.infrastructure.PersistentBoolean;
+import es.jonatantierno.passwordcoach.infrastructure.PersistentStringSetObservable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -42,21 +43,38 @@ public class DictionaryActivity extends AppCompatActivity {
     }
 
     private void switchDictionary(boolean isChecked) {
-        if (isChecked) {
+        PersistentStringSetObservable storedDictionary = new PersistentStringSetObservable(this);
 
+        if (isChecked) {
             progress.setVisibility(View.VISIBLE);
 
-            new RxDictionary(new ObservableTweets(this).go()).asObservable()
-                    .reduce(new StringBuffer(), (buffer, word) -> buffer.append(word).append(" \t \t \t "))
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(
-                            buffer -> setDictionaryText(getString(R.string.dictionary_title), buffer.toString()),
-                            e -> setDictionaryText(e.toString(), "")
-                    );
+
+            if (storedDictionary.empty()) {
+                storedDictionary.save(
+                        new RxDictionary(new ObservableTweets(this).go()).asObservable())
+                        .doOnCompleted(() -> show(storedDictionary))
+                        .subscribeOn(Schedulers.io())
+                        .subscribe();
+            } else {
+                show(storedDictionary);
+            }
+
         } else {
+            storedDictionary.clear();
             setDictionaryText(getString(R.string.dictionary_info), "");
         }
+    }
+
+    private void show(PersistentStringSetObservable storedDictionary) {
+        storedDictionary.load()
+                .reduce(new StringBuffer(), (buffer, word) -> buffer.append(word).append(" \t \t \t "))
+                .map(StringBuffer::toString)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        buffer -> setDictionaryText(getString(R.string.dictionary_title), buffer.toString()),
+                        e -> setDictionaryText(e.toString(), "")
+                );
     }
 
     private void setDictionaryText(String head, String body) {

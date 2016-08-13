@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import java.util.Iterator;
 
 public class DictionaryRule implements Rule {
-    public static final int MIN_DICTIONARY_WORD_LENGTH = 4;
+    public static final int MIN_DICTIONARY_WORD_LENGTH = 3;
     private final Iterator<String> dictionary;
 
     public DictionaryRule(Iterator<String> dictionary) {

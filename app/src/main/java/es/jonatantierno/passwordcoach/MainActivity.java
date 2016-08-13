@@ -37,9 +37,6 @@ import es.jonatantierno.passwordcoach.infrastructure.repositories.ZxcvbnPassword
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
-    public static final int MIN_LENGTH = 9;
-    public static final int MIN_STRENGTH = 3;
-
     private EditText password;
     private TextView result;
     private View progress;
@@ -49,10 +46,12 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private TipSource tipSource;
     private boolean readyToLeave = true;
     private KeyboardControl keyboardControl;
+    private AndroidAnalysis androidAnalysis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        androidAnalysis = new AndroidAnalysis(this, this);
 
         setContentView(R.layout.activity_main);
         progress = findViewById(R.id.progress);
@@ -66,27 +65,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
                 keyboardControl.hide();
                 progress.setVisibility(View.VISIBLE);
 
-                new AndroidAnalysis(
-                        this,
-                        new SetOfRules(
-                                Arrays.asList(
-                                        new ToggableRule(
-                                                new PersistentBoolean(this).load(),
-                                                new ObservableDictionaryRule(
-                                                        new RxDictionary(
-                                                                new ObservableTweets(this).go()).asObservable())
-                                        ),
-                                        new ShortPasswordRule(MIN_LENGTH),
-                                        new DictionaryRule(
-                                                this.getResources().openRawResource(R.raw.spanish_words)
-                                        ),
-                                        new DictionaryRule(
-                                                this.getResources().openRawResource(R.raw.common_passwords)
-                                        ),
-                                        new PasswordMeterRule(new ZxcvbnPasswordMeter(), MIN_STRENGTH)
-                                )
-                        )
-                ).start(password.getText().toString().trim());
+                androidAnalysis.start(password.getText().toString().trim());
 
                 return true;
             } else {
