@@ -14,5 +14,6 @@ public class ResultCodeToStringIdMap extends HashMap<ResultCode, Integer> {
         put(ResultCode.WEAK_ACCORDING_TO_METER, R.string.weak_according_to_meter);
         put(ResultCode.CONTAINS_WORD_IN_DICTIONARY, R.string.contains_word_in_a_dictionary);
         put(ResultCode.IN_PERSONAL_ATTACK_DICTIONARY, R.string.in_personal_attack_dictionary);
+        put(ResultCode.CONTAINS_DATE, R.string.contains_date);
     }
 }

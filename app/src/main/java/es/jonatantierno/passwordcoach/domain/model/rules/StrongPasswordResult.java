@@ -1,13 +1,8 @@
 package es.jonatantierno.passwordcoach.domain.model.rules;
 
-public class StrongPasswordResult implements Result {
-    @Override
-    public boolean passwordIsStrong() {
-        return true;
-    }
+public class StrongPasswordResult extends BasicResult {
 
-    @Override
-    public ResultCode code() {
-        return ResultCode.STRONG;
+    public StrongPasswordResult() {
+        super(ResultCode.STRONG, true);
     }
 }

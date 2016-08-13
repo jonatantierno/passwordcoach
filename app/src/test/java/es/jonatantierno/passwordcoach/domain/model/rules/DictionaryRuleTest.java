@@ -4,12 +4,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static es.jonatantierno.passwordcoach.domain.model.rules.ResultCode.*;
-import static java.util.Arrays.*;
-import static java.util.Collections.*;
+import static es.jonatantierno.passwordcoach.domain.model.rules.ResultCode.CONTAINS_WORD_IN_DICTIONARY;
+import static es.jonatantierno.passwordcoach.domain.model.rules.ResultCode.IN_DICTIONARY;
+import static java.util.Arrays.asList;
+import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -34,6 +32,15 @@ public class DictionaryRuleTest {
 
         assertThat(result.passwordIsStrong(), is(false));
         assertThat(result.code(), is(CONTAINS_WORD_IN_DICTIONARY));
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void callTwice(){
+        String password = "hola";
+
+        DictionaryRule dictionaryRule = new DictionaryRule(asList(password).iterator());
+        dictionaryRule.analyze("3k5jelis ");
+        dictionaryRule.analyze("Hola");
     }
 
     @Test

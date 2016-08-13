@@ -4,25 +4,22 @@ import android.support.v4.app.FragmentActivity;
 
 import java.util.Arrays;
 
-import es.jonatantierno.passwordcoach.MainActivity;
 import es.jonatantierno.passwordcoach.R;
 import es.jonatantierno.passwordcoach.domain.model.Analysis;
-import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
 import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
+import es.jonatantierno.passwordcoach.domain.model.rules.NoDateRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.ObservableDictionaryRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
-import es.jonatantierno.passwordcoach.domain.model.rules.Rule;
 import es.jonatantierno.passwordcoach.domain.model.rules.SetOfRules;
 import es.jonatantierno.passwordcoach.domain.model.rules.ShortPasswordRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.ToggableRule;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import es.jonatantierno.passwordcoach.infrastructure.repositories.ZxcvbnPasswordMeter;
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class AndroidAnalysis extends Analysis {
-    private static final int MIN_LENGTH = 9;
+    private static final int MIN_LENGTH = 8;
     private static final int MIN_STRENGTH = 3;
 
     public AndroidAnalysis(Gui gui, FragmentActivity activity) {
@@ -30,6 +27,7 @@ public class AndroidAnalysis extends Analysis {
                 gui,
                 new SetOfRules(
                         Arrays.asList(
+                                new NoDateRule(),
                                 new ToggableRule(
                                         new PersistentBoolean(activity).load(),
                                         new ObservableDictionaryRule(

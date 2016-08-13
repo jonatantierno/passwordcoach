@@ -1,24 +1,10 @@
 package es.jonatantierno.passwordcoach.domain.model.rules;
 
-public class WeakPasswordResult implements Result {
-
-    private final ResultCode resultCode;
-
+public class WeakPasswordResult extends BasicResult{
     public WeakPasswordResult(ResultCode resultCode) {
-
-        this.resultCode = resultCode;
+        super(resultCode,false);
     }
     public WeakPasswordResult() {
         this(ResultCode.WEAK);
-    }
-
-    @Override
-    public boolean passwordIsStrong() {
-        return false;
-    }
-
-    @Override
-    public ResultCode code() {
-        return resultCode;
     }
 }

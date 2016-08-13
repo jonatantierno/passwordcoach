@@ -12,28 +12,17 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import es.jonatantierno.passwordcoach.domain.model.dictionary.RxDictionary;
-import es.jonatantierno.passwordcoach.domain.model.rules.DictionaryRule;
-import es.jonatantierno.passwordcoach.domain.model.rules.ObservableDictionaryRule;
-import es.jonatantierno.passwordcoach.domain.model.rules.PasswordMeterRule;
 import es.jonatantierno.passwordcoach.domain.model.rules.Result;
 import es.jonatantierno.passwordcoach.domain.model.rules.ResultCode;
-import es.jonatantierno.passwordcoach.domain.model.rules.SetOfRules;
-import es.jonatantierno.passwordcoach.domain.model.rules.ShortPasswordRule;
-import es.jonatantierno.passwordcoach.domain.model.rules.ToggableRule;
 import es.jonatantierno.passwordcoach.domain.model.tips.TipSource;
 import es.jonatantierno.passwordcoach.domain.ports.Gui;
 import es.jonatantierno.passwordcoach.infrastructure.AndroidAnalysis;
 import es.jonatantierno.passwordcoach.infrastructure.ConfiguredTipSource;
 import es.jonatantierno.passwordcoach.infrastructure.KeyboardControl;
-import es.jonatantierno.passwordcoach.infrastructure.ObservableTweets;
-import es.jonatantierno.passwordcoach.infrastructure.PersistentBoolean;
 import es.jonatantierno.passwordcoach.infrastructure.ResultCodeToStringIdMap;
 import es.jonatantierno.passwordcoach.infrastructure.repositories.TipFrame;
-import es.jonatantierno.passwordcoach.infrastructure.repositories.ZxcvbnPasswordMeter;
 
 public class MainActivity extends AppCompatActivity implements Gui {
 
@@ -46,12 +35,10 @@ public class MainActivity extends AppCompatActivity implements Gui {
     private TipSource tipSource;
     private boolean readyToLeave = true;
     private KeyboardControl keyboardControl;
-    private AndroidAnalysis androidAnalysis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        androidAnalysis = new AndroidAnalysis(this, this);
 
         setContentView(R.layout.activity_main);
         progress = findViewById(R.id.progress);
@@ -65,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
                 keyboardControl.hide();
                 progress.setVisibility(View.VISIBLE);
 
-                androidAnalysis.start(password.getText().toString().trim());
+                new AndroidAnalysis(this,this).start(password.getText().toString().trim());
 
                 return true;
             } else {

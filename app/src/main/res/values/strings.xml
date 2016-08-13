@@ -20,4 +20,5 @@
     <string name="contains_word_in_a_dictionary">The password contains a word in a dictionary.</string>
     <string name="in_personal_attack_dictionary">You have used a word in your personal attack dictionary</string>
     <string name="downloading_dictionary">Creating attack dictionary...</string>
+    <string name="contains_date">¿Are you using a date? You should not use known personal data like birthdays or anniversaries to compose your passwords.</string>
 </resources>
