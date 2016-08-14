@@ -75,6 +75,13 @@ public class RxDictionaryTest {
     }
 
     @Test
+    public void underscore() {
+        new RxDictionary(Observable.just("under_score", "dash-char")).asObservable().subscribe(testSubscriber);
+
+        testSubscriber.assertValues("under","score", "dash", "char");
+    }
+
+    @Test
     public void uppercase() {
         new RxDictionary(Observable.just("LowerCase")).asObservable().subscribe(testSubscriber);
 

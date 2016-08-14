@@ -40,7 +40,7 @@ public class RxDictionary {
     }
 
     private Observable<? extends String> split(String s) {
-        return Observable.from(s.split("[ ,.;!()\\?¿]"));
+        return Observable.from(s.split("[ ,.;!()\\?¿_-]"));
     }
 
     private Observable<? extends String> usernameOrHashtag(String s) {

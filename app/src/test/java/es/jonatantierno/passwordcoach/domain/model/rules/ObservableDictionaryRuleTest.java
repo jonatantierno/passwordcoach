@@ -1,43 +1,63 @@
 package es.jonatantierno.passwordcoach.domain.model.rules;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import rx.Observable;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static rx.Observable.just;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ObservableDictionaryRuleTest {
+    @Mock
+    WordCheck check;
+
     @Test(expected = RuntimeException.class)
-    public void error(){
+    public void error() {
         new ObservableDictionaryRule(Observable.error(new Exception())).analyze("foo");
     }
 
     @Test
-    public void empty(){
-        Result result = new ObservableDictionaryRule(Observable.empty()).analyze("foo");
+    public void strongPassword() {
+        String password = "password";
+        when(check.analyze(anyString(), eq(password))).thenReturn(ResultCode.STRONG);
 
-        assertThat(result.passwordIsStrong(), is(true));
+        Result result = new ObservableDictionaryRule(listOfWords(), check).analyze(password);
+
+        listOfWords().forEach(word -> verify(check).analyze(word, password));
+
+        assertThat(result, is(new StrongPasswordResult()));
+    }
+
+    private Observable<String> listOfWords() {
+        return just("anyWord", "anotherWord", "aThirdOne");
     }
 
     @Test
-    public void wordNotInDictionary(){
-        Result result = new ObservableDictionaryRule(Observable.just("password")).analyze("foo");
+    public void weakPassword() {
+        String firstWord = "first";
+        String password = "password";
+        String third = "third";
 
-        assertThat(result.passwordIsStrong(), is(true));
-    }
+        when(check.analyze(firstWord, password)).thenReturn(ResultCode.STRONG);
+        when(check.analyze(password, password)).thenReturn(ResultCode.WEAK);
 
-    @Test
-    public void containsWordInDictionary() {
-        Result result = new ObservableDictionaryRule(Observable.just("bar")).analyze("barco");
+        Result result = new ObservableDictionaryRule(just(firstWord, password, third), check)
+                .analyze(password);
 
-        assertThat(result.passwordIsStrong(), is(false));
-    }
+        verify(check).analyze(firstWord, password);
+        verify(check).analyze(password, password);
+        verify(check, never()).analyze(password, third);
 
-    @Test
-    public void wordInDictionary(){
-        Result result = new ObservableDictionaryRule(Observable.just("bar","foo")).analyze("foo");
-
-        assertThat(result.passwordIsStrong(), is(false));
+        assertThat(result, is(new WeakPasswordResult(ResultCode.IN_PERSONAL_ATTACK_DICTIONARY)));
     }
 }

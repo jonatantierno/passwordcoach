@@ -9,12 +9,17 @@ import es.jonatantierno.passwordcoach.domain.model.dictionary.DictionaryIterator
 import es.jonatantierno.passwordcoach.domain.model.dictionary.LineStream;
 
 public class DictionaryRule implements Rule {
-    public static final int MIN_DICTIONARY_WORD_LENGTH = 3;
     private final Iterator<String> dictionary;
     private boolean used = false;
+    private final WordCheck check;
+
+    public DictionaryRule(Iterator<String> dictionary, WordCheck wordCheck) {
+        this.dictionary = dictionary;
+        this.check = wordCheck;
+    }
 
     public DictionaryRule(Iterator<String> dictionary) {
-        this.dictionary = dictionary;
+        this(dictionary,new WordCheck());
     }
 
     public DictionaryRule(InputStream inputStream) {
@@ -35,12 +40,10 @@ public class DictionaryRule implements Rule {
         used = true;
 
         while (dictionary.hasNext()) {
-            String next = dictionary.next();
-            if(next.length() > MIN_DICTIONARY_WORD_LENGTH && password.contains(next)) {
-                if (password.equals(next)) {
-                    return new WeakPasswordResult(ResultCode.IN_DICTIONARY);
-                }
-                return new WeakPasswordResult(ResultCode.CONTAINS_WORD_IN_DICTIONARY);
+            ResultCode resultCode = check.analyze(dictionary.next(), password);
+
+            if (resultCode != ResultCode.STRONG){
+                return new WeakPasswordResult(resultCode);
             }
         }
         return new StrongPasswordResult();

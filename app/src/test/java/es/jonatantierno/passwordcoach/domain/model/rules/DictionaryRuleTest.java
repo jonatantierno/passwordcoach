@@ -2,65 +2,68 @@ package es.jonatantierno.passwordcoach.domain.model.rules;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static es.jonatantierno.passwordcoach.domain.model.rules.ResultCode.CONTAINS_WORD_IN_DICTIONARY;
-import static es.jonatantierno.passwordcoach.domain.model.rules.ResultCode.IN_DICTIONARY;
+import java.util.List;
+
 import static java.util.Arrays.asList;
-import static java.util.Collections.EMPTY_LIST;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DictionaryRuleTest {
+    @Mock
+    WordCheck check;
 
     @Test
-    public void wordInDictionary(){
+    public void strongPassword() {
         String password = "password";
+        when(check.analyze(anyString(), eq(password))).thenReturn(ResultCode.STRONG);
 
-        Result result = new DictionaryRule(asList(password).iterator()).analyze(password);
+        Result result = new DictionaryRule(listOfWords().iterator(), check).analyze(password);
 
-        assertThat(result.passwordIsStrong(), is(false));
-        assertThat(result.code(), is(IN_DICTIONARY));
+        for (String word : listOfWords()) {
+            verify(check).analyze(word, password);
+        }
+
+        assertThat(result, is(new StrongPasswordResult()));
+    }
+
+    private List<String> listOfWords() {
+        return asList("anyWord", "anotherWord", "aThirdOne");
     }
 
     @Test
-    public void containsWordInDictionary(){
-        String password = "hola";
+    public void weakPassword() {
+        String firstWord = "first";
+        String password = "password";
+        String third = "third";
 
-        Result result = new DictionaryRule(asList(password).iterator()).analyze("**"+password+"1234");
+        when(check.analyze(firstWord, password)).thenReturn(ResultCode.STRONG);
+        when(check.analyze(password, password)).thenReturn(ResultCode.WEAK);
 
-        assertThat(result.passwordIsStrong(), is(false));
-        assertThat(result.code(), is(CONTAINS_WORD_IN_DICTIONARY));
+        Result result = new DictionaryRule(asList(firstWord, password, third).iterator(), check)
+                .analyze(password);
+
+        verify(check).analyze(firstWord, password);
+        verify(check).analyze(password, password);
+        verify(check, never()).analyze(password, third);
+
+        assertThat(result, is(new WeakPasswordResult()));
     }
 
     @Test(expected = IllegalStateException.class)
-    public void callTwice(){
+    public void callTwice() {
         String password = "hola";
 
         DictionaryRule dictionaryRule = new DictionaryRule(asList(password).iterator());
         dictionaryRule.analyze("3k5jelis ");
         dictionaryRule.analyze("Hola");
-    }
-
-    @Test
-    public void wordOfLessThanFourLetters(){
-        Result result = new DictionaryRule(asList("wor").iterator()).analyze("word");
-
-        assertThat(result.passwordIsStrong(), is(true));
-    }
-
-    @Test
-    public void wordNotInDictionary(){
-        Result result = new DictionaryRule(asList("word").iterator()).analyze("another one");
-
-        assertThat(result.passwordIsStrong(), is(true));
-    }
-
-    @Test
-    public void emptyDictionary(){
-        Result result = new DictionaryRule(EMPTY_LIST.iterator()).analyze("foo");
-
-        assertThat(result.passwordIsStrong(), is(true));
     }
 }

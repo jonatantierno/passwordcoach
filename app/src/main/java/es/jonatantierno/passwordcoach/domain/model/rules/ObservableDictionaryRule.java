@@ -9,9 +9,15 @@ import rx.Observable;
  */
 public class ObservableDictionaryRule implements Rule {
     private final Observable<String> dictionary;
+    private final WordCheck check;
 
     public ObservableDictionaryRule(Observable<String> dictionary) {
+        this(dictionary, new WordCheck());
+    }
+
+    public ObservableDictionaryRule(Observable<String> dictionary, WordCheck check) {
         this.dictionary = dictionary;
+        this.check = check;
     }
 
     @Override
@@ -20,7 +26,7 @@ public class ObservableDictionaryRule implements Rule {
                 e -> {
                     throw new RuntimeException(e);
                 })
-                .filter(s -> password.contains(s))
+                .takeFirst(word -> check.analyze(word,password) != ResultCode.STRONG)
                 .toBlocking().getIterator();
 
         if (coincidences.hasNext()) {
