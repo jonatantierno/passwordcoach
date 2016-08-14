@@ -14,7 +14,8 @@
     <string name="personal_dictionary">Personal Dictionary</string>
     <string name="pers_dict">dict.</string>
     <string name="dictionary_info">Connect to your Twitter account to create a personalized attack dictionary.\n\n
-        The analysis will use this information to find weaknesses in you passwords just like a motivated hacker would do.</string>
+        The analysis will use this information to find weaknesses in you passwords just like a motivated hacker would do.\n\n
+    Don\'t worry, this information will not be sent anywhere else or used for any other purpose.</string>
     <string name="dictionarySwitch">Personal Attack Dictionary</string>
     <string name="dictionary_title">Current contents of your Personal Attack Dictionary.</string>
     <string name="contains_word_in_a_dictionary">The password contains a word in a dictionary.</string>
