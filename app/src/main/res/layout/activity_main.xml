@@ -97,6 +97,13 @@
                     android:text="-"
                     android:id="@+id/tip_content" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:text="&quot;&quot;"
+                    android:id="@+id/spinner_title" />
+
                 <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

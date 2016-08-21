@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ import rx.functions.Action1;
 import static android.widget.ArrayAdapter.createFromResource;
 
 public class TipSpinner {
+    private final TextView title;
     private final Spinner spinner;
     private final Context context;
     private final Map<TipType, Action1<Spinner>> typeToSpinnerConf;
@@ -30,6 +32,7 @@ public class TipSpinner {
         typeToSpinnerConf = buildTipTypeToSpinnerConf(context);
 
         spinner = (Spinner) container.findViewById(R.id.more_info_spinner);
+        title = (TextView) container.findViewById(R.id.spinner_title);
     }
 
     private int contents(TipType tipType) {
@@ -40,6 +43,11 @@ public class TipSpinner {
     private int titles(TipType tipType) {
         if (tipType == TipType.ADVICE) return R.array.advice_titles;
         else return R.array.technique_titles;
+    }
+
+    private int title(TipType tipType) {
+        if (tipType == TipType.ADVICE) return R.string.advice_spinner_title;
+        else return R.string.technique_spinner_title;
     }
 
     private Map<TipType, Action1<Spinner>> buildTipTypeToSpinnerConf(Context context) {
@@ -77,10 +85,13 @@ public class TipSpinner {
     }
 
     public void setSpinner(TipType type) {
+        user=false;
+
         spinner.setOnItemSelectedListener(listener());
 
         this.tipType = type;
         spinner.setVisibility(View.VISIBLE);
+        title.setText(title(this.tipType));
         typeToSpinnerConf.get(this.tipType).call(spinner);
 
     }

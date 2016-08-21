@@ -7,8 +7,8 @@
     <string name="password_is_too_short">The password is too short.</string>
     <string name="password_is_in_dictionary">The password is in a dictionary</string>
     <string name="weak_according_to_meter">According to the password meter, this is weak.</string>
-    <string name="advice_technique">You can follow this technique to create simple but strong passwords:</string>
-    <string name="advice">Now that you can create strong passwords, follow these advices to protect them:</string>
+    <string name="advice_technique">\n\nYou can follow this technique to create simple but strong passwords:</string>
+    <string name="advice">\n\nNow that you can create strong passwords, follow these advices to protect them:</string>
     <string name="empty" />
     <string name="analyzing">Analyzing password, please wait...</string>
     <string name="personal_dictionary">Personal Dictionary</string>
@@ -26,4 +26,6 @@
     <string name="password_creation_condensed">techniques</string>
     <string name="password_advice">Password advice</string>
     <string name="password_advice_condensed">advice</string>
+    <string name="advice_spinner_title">\n\nMore advice on protecting your passwords:</string>
+    <string name="technique_spinner_title">\n\nMore techniques to create good passwords:</string>
 </resources>
