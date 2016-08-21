@@ -10,7 +10,7 @@ public class ShortPasswordRule implements Rule {
 
     @Override
     public Result analyze(String password) {
-        if (password.length() > minLength) {
+        if (password.length() >= minLength) {
             return new StrongPasswordResult();
         }
         else {
