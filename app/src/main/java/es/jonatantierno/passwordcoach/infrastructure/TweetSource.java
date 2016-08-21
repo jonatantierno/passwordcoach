@@ -1,6 +1,7 @@
 package es.jonatantierno.passwordcoach.infrastructure;
 
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 
 import com.wuman.android.auth.oauth.OAuthHmacCredential;
 
@@ -39,6 +40,8 @@ public class TweetSource {
         } catch (IOException e) {
             observer.onError(e);
         } catch (TwitterException e) {
+            observer.onError(e);
+        } catch (IllegalStateException e) {
             observer.onError(e);
         }
     }

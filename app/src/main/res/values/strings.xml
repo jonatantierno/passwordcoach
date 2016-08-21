@@ -28,4 +28,6 @@
     <string name="password_advice_condensed">advice</string>
     <string name="advice_spinner_title">\n\nMore advice on protecting your passwords:</string>
     <string name="technique_spinner_title">\n\nMore techniques to create good passwords:</string>
+    <string name="twitter_error_title">Error connecting to twitter</string>
+    <string name="twitter_error_content">Please try again later</string>
 </resources>

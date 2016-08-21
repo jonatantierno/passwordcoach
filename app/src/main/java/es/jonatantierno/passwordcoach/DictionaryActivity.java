@@ -50,9 +50,13 @@ public class DictionaryActivity extends AppCompatActivity {
 
 
             if (storedDictionary.empty()) {
+
                 storedDictionary.save(
                         new RxDictionary(new ObservableTweets(this).go()).asObservable())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .doOnCompleted(() -> show(storedDictionary))
+                        .doOnError(throwable -> setDictionaryText(getString(R.string.twitter_error_title), getString(R.string.twitter_error_content)))
                         .subscribeOn(Schedulers.io())
                         .subscribe();
             } else {
@@ -67,6 +71,8 @@ public class DictionaryActivity extends AppCompatActivity {
 
     private void show(PersistentStringSetObservable storedDictionary) {
         storedDictionary.load()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .reduce(new StringBuffer(), (buffer, word) -> buffer.append(word).append(" \t \t \t "))
                 .map(StringBuffer::toString)
                 .subscribeOn(Schedulers.io())
