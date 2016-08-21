@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
         setContentView(R.layout.activity_main);
         progress = findViewById(R.id.progress);
-        tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout));
+        tipframe = new TipFrame((ViewGroup) findViewById(R.id.tipLayout), this);
 
 
         password = (EditText) findViewById(R.id.passwordEditText);
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements Gui {
                 keyboardControl.hide();
                 progress.setVisibility(View.VISIBLE);
 
-                new AndroidAnalysis(this,this).start(password.getText().toString().trim());
+                new AndroidAnalysis(this, this).start(password.getText().toString().trim());
 
                 return true;
             } else {
@@ -110,5 +110,19 @@ public class MainActivity extends AppCompatActivity implements Gui {
 
     public void goToDictionaryActivity(MenuItem item) {
         startActivity(new Intent(this, DictionaryActivity.class));
+    }
+
+    public void goToTechniquesActivity(MenuItem item) {
+        startActivity(new Intent(this, InfoActivity.class)
+                .putExtra(InfoActivity.TITLES, R.array.technique_titles)
+                .putExtra(InfoActivity.CONTENT, R.array.technique_contents)
+                .putExtra(InfoActivity.TYPE, R.string.password_creation));
+    }
+
+    public void goToAdviceActivity(MenuItem item) {
+        startActivity(new Intent(this, InfoActivity.class)
+                .putExtra(InfoActivity.TITLES, R.array.advice_titles)
+                .putExtra(InfoActivity.CONTENT, R.array.advice_contents)
+                .putExtra(InfoActivity.TYPE, R.string.password_advice));
     }
 }

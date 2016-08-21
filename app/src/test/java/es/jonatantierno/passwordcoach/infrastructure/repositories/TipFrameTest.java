@@ -13,7 +13,7 @@ import static org.mockito.Mockito.mock;
 public class TipFrameTest {
     @Test
     public void makeSureAllResultsAreMapped(){
-        TipFrame tipFrame = new TipFrame(mock(ViewGroup.class));
+        TipFrame tipFrame = new TipFrame(mock(ViewGroup.class),null);
 
         for (TipType type: TipType.values()) {
             assertNotNull(tipFrame.getId(type));

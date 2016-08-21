@@ -30,7 +30,7 @@ public class ShortPasswordRuleTest {
     @Test
     public void longPassword(){
         Result result = new ShortPasswordRule(8).analyze("This password is long");
-        
+
         assertThat(result, is(new StrongPasswordResult()));
     }
 

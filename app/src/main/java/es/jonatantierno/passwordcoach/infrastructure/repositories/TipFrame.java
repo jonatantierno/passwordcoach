@@ -1,5 +1,6 @@
 package es.jonatantierno.passwordcoach.infrastructure.repositories;
 
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -11,15 +12,17 @@ import es.jonatantierno.passwordcoach.R;
 import es.jonatantierno.passwordcoach.domain.model.tips.Tip;
 import es.jonatantierno.passwordcoach.domain.model.tips.TipType;
 import es.jonatantierno.passwordcoach.domain.ports.TipDisplay;
+import es.jonatantierno.passwordcoach.infrastructure.TipSpinner;
 
 public class TipFrame implements TipDisplay {
     private final TextView message;
     private final TextView title;
     private final TextView content;
     private final ViewGroup container;
-    private final Map<TipType, Integer> typeToStringId;
+    private final TipSpinner tipSpinner;
+    private final Map<TipType, Integer> typeToStringId = buildTipTypeToStringId();
 
-    private Map<TipType,Integer> buildTipTypeToStringId() {
+    private Map<TipType, Integer> buildTipTypeToStringId() {
         HashMap<TipType, Integer> map = new HashMap<>();
         map.put(TipType.ADVICE, R.string.advice);
         map.put(TipType.TECHNIQUE, R.string.advice_technique);
@@ -28,16 +31,16 @@ public class TipFrame implements TipDisplay {
         return map;
     }
 
-    public TipFrame(ViewGroup container) {
-        typeToStringId = buildTipTypeToStringId();
+    public TipFrame(ViewGroup container, Context context) {
         this.container = container;
         message= (TextView) container.findViewById(R.id.advice_technique_textview);
         title = (TextView) container.findViewById(R.id.tip_title);
         content = (TextView) container.findViewById(R.id.tip_content);
+        tipSpinner = new TipSpinner(container,context);
     }
 
     //For testing
-    Integer getId(TipType type){
+    Integer getId(TipType type) {
         return typeToStringId.get(type);
     }
 
@@ -47,6 +50,7 @@ public class TipFrame implements TipDisplay {
         title.setText(tip.title);
         content.setText(tip.content);
         container.setVisibility(View.VISIBLE);
+        tipSpinner.setSpinner(tip.type);
     }
 
     public void hide() {

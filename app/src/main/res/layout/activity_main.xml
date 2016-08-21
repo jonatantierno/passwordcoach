@@ -96,6 +96,11 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="-"
                     android:id="@+id/tip_content" />
+
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/more_info_spinner" />
             </LinearLayout>
         </FrameLayout>
     </ScrollView>

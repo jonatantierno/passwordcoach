@@ -4,4 +4,12 @@
     android:title="@string/personal_dictionary"
     android:titleCondensed="@string/pers_dict"
     android:onClick="goToDictionaryActivity"/>
+    <item android:id="@+id/password_creation"
+        android:title="@string/password_creation"
+        android:titleCondensed="@string/password_creation_condensed"
+        android:onClick="goToTechniquesActivity"/>
+    <item android:id="@+id/password_advice"
+        android:title="@string/password_advice"
+        android:titleCondensed="@string/password_advice_condensed"
+        android:onClick="goToAdviceActivity"/>
 </menu>
