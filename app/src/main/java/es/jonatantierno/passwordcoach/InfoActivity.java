@@ -45,7 +45,7 @@ public class InfoActivity extends AppCompatActivity {
         super.onResume();
 
         getSupportActionBar().setTitle(type());
-        spinner.setAdapter(createFromResource(this, titles(), android.R.layout.activity_list_item));
+        spinner.setAdapter(createFromResource(this, titles(), android.R.layout.simple_spinner_item));
 
         contents = getIntent().getIntExtra(CONTENT, R.array.technique_contents);
 
