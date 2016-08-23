@@ -55,10 +55,9 @@ public class DictionaryActivity extends AppCompatActivity {
                         new RxDictionary(new ObservableTweets(this).go()).asObservable())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .doOnCompleted(() -> show(storedDictionary))
-                        .doOnError(throwable -> setDictionaryText(getString(R.string.twitter_error_title), getString(R.string.twitter_error_content)))
                         .subscribeOn(Schedulers.io())
-                        .subscribe();
+                        .subscribe(s -> show(storedDictionary),
+                                throwable -> setDictionaryText(getString(R.string.twitter_error_title), getString(R.string.twitter_error_content)));
             } else {
                 show(storedDictionary);
             }

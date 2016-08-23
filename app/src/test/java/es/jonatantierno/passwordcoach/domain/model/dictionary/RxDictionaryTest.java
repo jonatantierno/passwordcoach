@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import rx.Observable;
 import rx.observers.TestSubscriber;
+import rx.schedulers.Schedulers;
 
 public class RxDictionaryTest {
 
@@ -78,7 +79,7 @@ public class RxDictionaryTest {
     public void underscore() {
         new RxDictionary(Observable.just("under_score", "dash-char")).asObservable().subscribe(testSubscriber);
 
-        testSubscriber.assertValues("under","score", "dash", "char");
+        testSubscriber.assertValues("under", "score", "dash", "char");
     }
 
     @Test
@@ -95,4 +96,14 @@ public class RxDictionaryTest {
         testSubscriber.assertValues("hola");
     }
 
+    @Test
+    public void rxError() {
+
+        new RxDictionary(Observable.error(new RuntimeException())).asObservable()
+                .doOnCompleted(() -> System.out.println("on completed"))
+                .doOnCompleted(() -> System.out.println("on completed again"))
+                .doOnError(throwable ->  System.out.println("on error"))
+                .subscribe(s -> System.out.println("subscribe"),
+                        throwable1 -> System.out.println("subscribe on Error:"+throwable1.toString()));
+    }
 }
